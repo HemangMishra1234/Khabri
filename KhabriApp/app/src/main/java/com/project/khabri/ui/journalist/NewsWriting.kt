@@ -26,9 +26,14 @@ import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Science
 import androidx.compose.material.icons.filled.SportsCricket
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,22 +60,35 @@ enum class NewsCategories(val value: String, val displayName: String, val icon: 
     TECHNOLOGY("technology", "Technology", Icons.Default.Laptop)
 }
 
+enum class ToneOfVoice(val displayName: String) {
+    OBJECTIVE_NEUTRAL("Objective and Neutral"),
+    AUTHORITATIVE_PROFESSIONAL("Authoritative and Professional"),
+    CONCISE_INFORMATIVE("Concise and Informative"),
+    ENGAGING_CONVERSATIONAL("Engaging and Conversational"),
+    URGENT_COMPELLING("Urgent and Compelling"),
+    EMPATHETIC_REASSURING("Empathetic and Reassuring"),
+    INQUISITIVE_THOUGHT_PROVOKING("Inquisitive and Thought-Provoking")
+}
+
+
 @Composable
 fun NewsWriting(
     onClickFeedback: () -> Unit = {},
     onClickPost: () -> Unit = {},
     viewModel: NewsWritingViewModel
 ) {
-
-    var isScreenImprove by remember {
+    val uiState by viewModel.uiState
+    val scrollState = rememberScrollState()
+    var isCategoryExpanded by remember {
         mutableStateOf(false)
     }
-    val scrollState = rememberScrollState()
+    var isToneExpanded by remember {
+        mutableStateOf(false)
+    }
     Box(
         modifier = Modifier
-            .statusBarsPadding()
             .fillMaxSize()
-            .padding(horizontal = 8.dp, vertical = 8.dp)
+            .padding(horizontal = 8.dp)
 
 
     ) {
@@ -88,7 +106,7 @@ fun NewsWriting(
                             .size(56.dp)
                     )
                     Text(
-                        text = "khabari",
+                        text = "khabri",
                         modifier = Modifier.padding(start = 8.dp),
                         style = MaterialTheme.typography.headlineLarge
                     )
@@ -111,11 +129,11 @@ fun NewsWriting(
                                 .padding(end = 8.dp)
                                 .clip(RoundedCornerShape(8.dp))
                                 .background(
-                                    if (!isScreenImprove) Color.White
+                                    if (uiState.currentPage == 0) Color.White
                                     else Color.Transparent
                                 )
                                 .clickable {
-                                    isScreenImprove = false
+                                    viewModel.updateCurrentPage(0)
                                 },
                             contentAlignment = Alignment.Center
 
@@ -128,11 +146,11 @@ fun NewsWriting(
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(8.dp))
                                 .background(
-                                    if (isScreenImprove) Color.White
+                                    if (uiState.currentPage == 1) Color.White
                                     else Color.Transparent
                                 )
                                 .padding(start = 8.dp)
-                                .clickable { isScreenImprove = true },
+                                .clickable { viewModel.updateCurrentPage(1) },
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
@@ -155,51 +173,180 @@ fun NewsWriting(
                         .verticalScroll(scrollState)
                         .fillMaxWidth()
                 ) {
-                    if (isScreenImprove) ImproveScreen()
-                    else WriteScreen()
+                    if (uiState.currentPage == 1) {
+                        ImproveScreen(
+                            uiState,
+                            { viewModel.updateImprovedDescription(it) },
+                            whenUseItClicked = {
+                                viewModel.updateDescription(uiState.improvedDescription)
+                                viewModel.updateCurrentPage(0)
+                            })
+                    } else {
+                        WriteScreen(
+                            uiState,
+                            onTitleChange = { viewModel.updateTitle(it) },
+                            isCategoryExpanded = isCategoryExpanded,
+                            onCategoryDismiss = { isCategoryExpanded = false },
+                            onCategoryExpanded = { isCategoryExpanded = true },
+                            onCategorySelected = { viewModel.updateCategory(it) },
+                            isToneExpanded = isToneExpanded,
+                            onToneExpanded = { isToneExpanded = true },
+                            onToneSelected = { viewModel.updateTone(it) },
+                            onToneDismiss = { isToneExpanded = false },
+                            onDescriptionChange = { viewModel.updateDescription(it) }
+                        )
+                    }
                 }
             }
         }
-        Row(
-            modifier = Modifier
-                .align(alignment = Alignment.BottomStart)
-                .height(60.dp)
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            OutlinedButton(
-                onClick = { onClickFeedback() },
+        if (uiState.currentPage == 0)
+            Row(
                 modifier = Modifier
-                    .weight(1f)
-
+                    .align(alignment = Alignment.BottomStart)
+                    .height(60.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = "Feedback")
-            }
-            Spacer(modifier = Modifier.width(4.dp))
-            Button(
-                onClick = { onClickPost() }, modifier = Modifier
-                    .weight(1f)
+                OutlinedButton(
+                    onClick = { onClickFeedback() },
+                    modifier = Modifier
+                        .weight(1f)
 
-            ) {
-                Text(text = "Post")
+                ) {
+                    Text(text = "Feedback")
+                }
+                Spacer(modifier = Modifier.width(4.dp))
+                Button(
+                    onClick = { onClickPost() }, modifier = Modifier
+                        .weight(1f)
+
+                ) {
+                    Text(text = "Post")
+                }
             }
-        }
     }
 }
 
 
 @Composable
-fun WriteScreen() {
+fun WriteScreen(
+    uiState: NewsWritingUIState,
+    onTitleChange: (String) -> Unit,
+    isCategoryExpanded: Boolean,
+    onCategoryDismiss: () -> Unit,
+    onCategoryExpanded: () -> Unit,
+    onCategorySelected: (String) -> Unit,
+    onToneSelected: (String) -> Unit,
+    onToneExpanded: () -> Unit,
+    onToneDismiss: () -> Unit,
+    isToneExpanded: Boolean,
+    onDescriptionChange: (String) -> Unit
+) {
+    OutlinedTextField(value = uiState.title, onValueChange = { onTitleChange(it) }, label = {
+        Text(text = "Title")
+    })
+    Row(modifier = Modifier.padding(8.dp)) {
+        Text(text = "Category :")
+        Column {
+            Text(text = uiState.category,
+                modifier = Modifier
+                    .clickable { onCategoryExpanded() }
+            )
+            DropdownMenu(expanded = isCategoryExpanded, onDismissRequest = onCategoryDismiss) {
+                NewsCategories.entries.forEach { category ->
+                    DropdownMenuItem(
+                        text = {
+                            Row {
+                                Icon(imageVector = category.icon, contentDescription = null)
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(text = category.displayName)
 
+
+                            }
+                        },
+                        onClick = {
+                            onCategorySelected(category.displayName)
+                            onCategoryDismiss()
+                        })
+                }
+
+            }
+
+        }
+
+    }
+    Row(modifier = Modifier.padding(8.dp)) {
+        Text(text = "Tone Of Voice :")
+        Column {
+            Text(text = uiState.tone,
+                modifier = Modifier
+                    .clickable { onToneExpanded() }
+            )
+            DropdownMenu(expanded = isToneExpanded, onDismissRequest = onToneDismiss) {
+                ToneOfVoice.entries.forEach { tone ->
+                    DropdownMenuItem(
+                        text = {
+                            Row {
+                                Text(text = tone.displayName)
+                                Spacer(modifier = Modifier.width(4.dp))
+                            }
+                        }, onClick = {
+                            onToneSelected(tone.displayName)
+                            onToneDismiss()
+                        })
+                }
+
+            }
+
+        }
+
+    }
+
+    OutlinedTextField(value = uiState.description, onValueChange = { onDescriptionChange(it) },
+        label = {
+            Text(text = "Description")
+        })
 
 }
 
 
 @Composable
-fun ImproveScreen() {
-    Text(text = "This is improve screen.")
+fun ImproveScreen(
+    uiState: NewsWritingUIState,
+    onImprovedDescriptionChange: (String) -> Unit,
+    whenUseItClicked: () -> Unit
+) {
+    OutlinedTextField(
+        value = uiState.improvedDescription,
+        onValueChange = { onImprovedDescriptionChange(it) })
+
+    Row(
+        modifier = Modifier
+            .height(60.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        OutlinedButton(
+            onClick = { },
+            modifier = Modifier
+                .weight(1f)
+
+        ) {
+            Text(text = "Regenerate")
+        }
+        Spacer(modifier = Modifier.width(4.dp))
+        Button(
+            onClick = { whenUseItClicked() }, modifier = Modifier
+                .weight(1f)
+
+        ) {
+            Text(text = "Use it")
+        }
+    }
 }
 
 
