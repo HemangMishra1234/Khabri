@@ -1,22 +1,30 @@
 import requests
+import csv
+import uuid
+import os
 from django.core.management.base import BaseCommand
 from news.models import News
-import uuid
 
 class Command(BaseCommand):
-    help = 'Fetch news from GNews API and store in the database'
+    help = 'Fetch news from GNews API, store in the database, and export to CSV'
 
     def handle(self, *args, **kwargs):
-        api_key = '6957e285ed82965de4bd118bd7c8f3d9'  # Replace with your actual API key
+        api_key = '21095d221849c6d5fa8db76b312b1219'  # Replace with your actual API key
         api_url = 'https://gnews.io/api/v4/top-headlines'
         
         categories = ['general', 'world', 'nation', 'business', 'technology', 'entertainment', 'sports', 'science', 'health']
+        country = 'ca'  # Set your country code here
+        all_articles = []
+        csv_file_path = 'news_data.csv'
+        
+        # Check if the file already exists to determine if we need to write the header
+        write_header = not os.path.exists(csv_file_path)
         
         for category in categories:
             params = {
                 'apikey': api_key,
                 'lang': 'en',
-                'country': 'in',
+                'country': country,
                 'category': category,
                 'max': 100
             }
@@ -27,6 +35,20 @@ class Command(BaseCommand):
                 articles = data.get('articles', [])
                 for article in articles:
                     unique_id = str(uuid.uuid4())  # Generate a unique ID
+                    all_articles.append({
+                        'unique_id': unique_id,
+                        'title': article['title'],
+                        'description': article.get('description', ''),
+                        'content': article.get('content', ''),
+                        'url': article.get('url', ''),
+                        'image': article.get('image', ''),
+                        'published_at': article.get('publishedAt', ''),
+                        'source_name': article['source'].get('name', ''),
+                        'source_url': article['source'].get('url', ''),
+                        'country': country,  # Include country
+                        'category': category  # Include category
+                    })
+                    
                     # Try to create or update the news item
                     news, created = News.objects.update_or_create(
                         unique_id=unique_id,
@@ -38,7 +60,9 @@ class Command(BaseCommand):
                             'image': article.get('image', ''),
                             'published_at': article.get('publishedAt', ''),
                             'source_name': article['source'].get('name', ''),
-                            'source_url': article['source'].get('url', '')
+                            'source_url': article['source'].get('url', ''),
+                            'country': country,  # Set country
+                            'category': category  # Set category
                         }
                     )
                     if created:
@@ -48,3 +72,17 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f'Successfully fetched and stored news data for category: {category}'))
             else:
                 self.stdout.write(self.style.ERROR(f'Failed to fetch news data for category: {category}'))
+        
+        # Append new articles to the existing CSV file
+        with open(csv_file_path, mode='a', newline='', encoding='utf-8') as file:
+            writer = csv.DictWriter(file, fieldnames=[
+                'unique_id', 'title', 'description', 'content', 'url', 'image', 'published_at', 'source_name', 'source_url', 'country', 'category'
+            ])
+            
+            # Write the header only if the file is new
+            if write_header:
+                writer.writeheader()
+                
+            writer.writerows(all_articles)
+        
+        self.stdout.write(self.style.SUCCESS(f'Successfully exported news data to {csv_file_path}'))
