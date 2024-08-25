@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import requests
 from .config import GNEWS_API_KEY
-from .models import News, UserData
+from .models import RecommendedArticle, News, UserData
 
 
 def home(request):
@@ -84,3 +84,18 @@ def list_users(request):
     users = UserData.objects.all().values('id', 'name', 'email', 'is_journalist')
     return JsonResponse(list(users), safe=False)
 
+
+def store_recommended_articles(user, article_ids):
+    recommended_articles = []
+    
+    for article_id in article_ids:
+        try:
+            news_article = News.objects.get(id=article_id)
+            recommended_article = RecommendedArticle(user=user, news=news_article)
+            recommended_articles.append(recommended_article)
+        except News.DoesNotExist:
+            # Handle the case where the article ID doesn't exist
+            continue
+    
+    # Bulk create to improve performance
+    RecommendedArticle.objects.bulk_create(recommended_articles)
