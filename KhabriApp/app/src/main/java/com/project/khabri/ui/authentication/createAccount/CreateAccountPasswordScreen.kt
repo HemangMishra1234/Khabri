@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.project.khabri.R
 import com.project.pattagobhi.ui.components.AppButton
-import com.project.khabri.ui.authentication.components.AppTextField
+import com.project.khabri.ui.components.AppTextField
 import com.project.pattagobhi.ui.components.HeadingOfCreateAccount
 import com.project.pattagobhi.ui.components.Wait
 import com.project.pattagobhi.ui.authentication.AuthenticationNavigation

@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import com.project.khabri.ui.feed.ListView
 import kotlinx.coroutines.launch
 
 @Composable
@@ -60,7 +61,11 @@ fun MainScreen(){
 
 @Composable
 fun HomeScreen(){
-    Box(modifier = Modifier.fillMaxSize())
+    Box(modifier = Modifier.fillMaxSize()){
+        ListView(articles = , viewModel = , modifier = , saveArticle = , unSaveArticle = ) {
+            
+        }
+    }
 }
 
 @Composable

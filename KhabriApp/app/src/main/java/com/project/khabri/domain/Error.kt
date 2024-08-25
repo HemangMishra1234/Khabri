@@ -1,5 +1,5 @@
-package com.project.pattagobhi.domain
+package com.project.khabri.domain
 
-sealed interface Error
+sealed interface APIError
 
-object Offline: Error
+data object Offline: APIError

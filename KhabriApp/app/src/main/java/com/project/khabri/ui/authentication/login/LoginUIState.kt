@@ -1,4 +1,4 @@
-package com.project.pattagobhi.ui.authentication.login
+package com.project.khabri.ui.authentication.login
 
 data class LoginUiState(
     val email: String = "",
