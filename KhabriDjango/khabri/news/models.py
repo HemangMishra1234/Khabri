@@ -11,8 +11,9 @@ class News(models.Model):
     published_at = models.DateTimeField(blank=True, null=True)
     source_name = models.CharField(max_length=255, blank=True)
     source_url = models.URLField(blank=True)
-    country = models.CharField(max_length=255, blank=True)  # Add country field
-    category = models.CharField(max_length=255, blank=True)  # Add category field
+    country = models.CharField(max_length=255, blank=True)
+    category = models.CharField(max_length=255, blank=True)
+    is_active = models.IntegerField(default=1)  # New field as integer
 
     def __str__(self):
         return self.title
