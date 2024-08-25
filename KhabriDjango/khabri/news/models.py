@@ -13,7 +13,7 @@ class News(models.Model):
     source_url = models.URLField(blank=True)
     country = models.CharField(max_length=255, blank=True)
     category = models.CharField(max_length=255, blank=True)
-    is_active = models.IntegerField(default=1)  # New field as integer
+    is_real = models.DecimalField(max_digits=4, decimal_places=3, default=1.0)  # Changed to DecimalField
 
     def __str__(self):
         return self.title
@@ -22,9 +22,8 @@ class ArticleInteraction(models.Model):
     article = models.ForeignKey(News, on_delete=models.CASCADE, related_name='interactions')
     user_id = models.CharField(max_length=255)  # String field for user_id
     is_liked = models.BooleanField(default=False)
-    time_spent = models.FloatField(default=0)  # Time spent in seconds
+    is_opened = models.BooleanField(default=False)
     is_reported = models.BooleanField(default=False)
-    no_of_views = models.PositiveIntegerField(default=0)  # Number of views
 
     def __str__(self):
         return f'Interaction by {self.user_id} on {self.article.title}'
