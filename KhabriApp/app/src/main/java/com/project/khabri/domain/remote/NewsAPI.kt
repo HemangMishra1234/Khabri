@@ -1,8 +1,11 @@
 package com.project.khabri.domain.remote
 
 import com.project.khabri.domain.data.Article
+import com.project.khabri.domain.data.UserData
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface NewsAPI {
@@ -28,5 +31,9 @@ interface NewsAPI {
     suspend fun getRecommendedNews(
         @Query("user-id") uid: String
     ): Response<List<Article>>
+
+    @POST("update_user/")
+    suspend fun updateUserData(@Body userData: UserData): Response<Void>
+
 
 }
