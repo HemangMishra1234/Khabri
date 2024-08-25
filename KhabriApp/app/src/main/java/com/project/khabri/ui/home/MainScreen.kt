@@ -16,11 +16,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.project.khabri.ui.feed.FeedViewModel
 import com.project.khabri.ui.feed.HomeScreen
+import com.project.khabri.ui.journalist.NewsWriting
+import com.project.khabri.ui.journalist.NewsWritingViewModel
 import com.project.pattagobhi.ui.home.NavigationItem
 import kotlinx.coroutines.launch
 
 @Composable
-fun MainScreen(viewModel: FeedViewModel){
+fun MainScreen(viewModel: FeedViewModel,newsWritingViewModel: NewsWritingViewModel){
     val uiState by viewModel.uiState
     val pagerState = rememberPagerState(pageCount = {
         NavigationItem.entries.size
@@ -57,6 +59,7 @@ fun MainScreen(viewModel: FeedViewModel){
                     }
                     NavigationItem.PROFILE -> Profile()
                     NavigationItem.CALENDER -> Calender()
+                    NavigationItem.ADDNEWS -> NewsWriting(onClickFeedback = {},viewModel = newsWritingViewModel)
                 }
 
             }
