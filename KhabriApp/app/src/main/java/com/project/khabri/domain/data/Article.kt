@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
-@Entity()
+@Entity(tableName = "article")
 @Parcelize
 data class Article(
     @PrimaryKey(autoGenerate = true)
@@ -17,7 +17,6 @@ data class Article(
     val sourceName: String,
     val sourceUrl: String,
     val title: String,
-    @PrimaryKey
     val url: String,
     val isLiked: Boolean = false,
     val isSaved: Boolean = false

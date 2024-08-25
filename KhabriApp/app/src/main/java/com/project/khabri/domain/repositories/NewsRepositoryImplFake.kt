@@ -8,31 +8,80 @@ import kotlinx.coroutines.delay
 class NewsRepositoryImplFake: NewsRepository {
 
     override suspend fun getSportsNews(): APIResponse<List<Article>, ArticlesError> {
-        TODO("Not yet implemented")
+                return try {
+            delay(3000)
+//            throw Exception()
+            APIResponse.Success(listOf(article, article, article, article, article, article))
+        }
+        catch (e: Exception){
+            APIResponse.Error(ArticlesError.NetworkError.NO_INTERNET)
+        }
     }
 
     override suspend fun getHealthNews(): APIResponse<List<Article>, ArticlesError> {
-        TODO("Not yet implemented")
+        return try {
+            delay(3000)
+//            throw Exception()
+            APIResponse.Success(listOf(article, article, article, article, article, article))
+        }
+        catch (e: Exception){
+            APIResponse.Error(ArticlesError.NetworkError.NO_INTERNET)
+        }
     }
 
     override suspend fun getBusinessNews(): APIResponse<List<Article>, ArticlesError> {
-        TODO("Not yet implemented")
+        return try {
+            delay(3000)
+//            throw Exception()
+            APIResponse.Success(listOf(article, article, article, article, article, article))
+        }
+        catch (e: Exception){
+            APIResponse.Error(ArticlesError.NetworkError.NO_INTERNET)
+        }
     }
 
     override suspend fun getEntertainmentNews(): APIResponse<List<Article>, ArticlesError> {
-        TODO("Not yet implemented")
+        return try {
+            delay(3000)
+//            throw Exception()
+            APIResponse.Success(listOf(article, article, article, article, article, article))
+        }
+        catch (e: Exception){
+            APIResponse.Error(ArticlesError.NetworkError.NO_INTERNET)
+        }
     }
 
     override suspend fun getTechnologyNews(): APIResponse<List<Article>, ArticlesError> {
-        TODO("Not yet implemented")
+        return try {
+            delay(3000)
+//            throw Exception()
+            APIResponse.Success(listOf(article, article, article, article, article, article))
+        }
+        catch (e: Exception){
+            APIResponse.Error(ArticlesError.NetworkError.NO_INTERNET)
+        }
     }
 
     override suspend fun getRecommendedNews(uid: String): APIResponse<List<Article>, ArticlesError> {
-        TODO("Not yet implemented")
+        return try {
+            delay(3000)
+//            throw Exception()
+            APIResponse.Success(listOf(article, article, article, article, article, article))
+        }
+        catch (e: Exception){
+            APIResponse.Error(ArticlesError.NetworkError.NO_INTERNET)
+        }
     }
 
     override suspend fun getScienceNews(): APIResponse<List<Article>, ArticlesError> {
-        TODO("Not yet implemented")
+        return try {
+            delay(3000)
+//            throw Exception()
+            APIResponse.Success(listOf(article, article, article, article, article, article))
+        }
+        catch (e: Exception){
+            APIResponse.Error(ArticlesError.NetworkError.NO_INTERNET)
+        }
     }
 }
 

@@ -8,11 +8,13 @@ import com.project.khabri.domain.repositories.AuthenticationService
 import com.project.khabri.domain.repositories.AuthenticationServiceImpl
 import com.project.khabri.domain.repositories.NewsRepository
 import com.project.khabri.domain.repositories.NewsRepositoryImpl
+import com.project.khabri.domain.repositories.NewsRepositoryImplFake
 import com.project.khabri.domain.repositories.SavedRepository
 import com.project.pattagobhi.ui.authentication.createAccount.CreateAccountViewModel
 import com.project.pattagobhi.ui.authentication.emailVerification.EmailVerificationViewModel
 import com.project.khabri.ui.authentication.login.LoginViewModel
 import com.project.khabri.domain.repositories.SavedRepositoryImpl
+import com.project.khabri.ui.feed.FeedViewModel
 import com.project.pattagobhi.data.remote.HttpRoutes
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
@@ -51,7 +53,7 @@ val pattagobhiModules = module {
     //This is how we use them
     single<NewsRepository> {
         //Now I can access it directly
-        NewsRepositoryImpl(api = get())
+        NewsRepositoryImplFake()
     }
 
 
@@ -63,5 +65,8 @@ val pattagobhiModules = module {
     }
     factory {
         LoginViewModel(get(), get())
+    }
+    factory {
+        FeedViewModel(get(), get())
     }
 }
