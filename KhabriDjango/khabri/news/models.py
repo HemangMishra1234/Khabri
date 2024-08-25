@@ -1,9 +1,7 @@
-# news/models.py
-
 from django.db import models
 
 class News(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, unique=True)  # Ensure the title is unique
     description = models.TextField()
     content = models.TextField()
     url = models.URLField(max_length=500)
