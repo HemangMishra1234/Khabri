@@ -4,6 +4,8 @@ from django.http import JsonResponse
 from .config import GNEWS_API_KEY
 from django.http import HttpResponse
 from .models import News
+from django.views.decorators.csrf import csrf_exempt
+
 
 def home(request):
     return HttpResponse("Welcome to the News App! Visit /news/ for the latest news.")
@@ -25,6 +27,9 @@ def get_news(request):
             source_name=article['source']['name'],
             source_url=article['source']['url'],
         )
+    
+        
 
     # Optionally return the news data as a JSON response
     return JsonResponse(data['articles'], safe=False)
+

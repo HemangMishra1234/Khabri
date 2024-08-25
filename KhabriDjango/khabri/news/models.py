@@ -1,14 +1,16 @@
 from django.db import models
+import uuid  # Import uuid to generate unique IDs
 
 class News(models.Model):
-    title = models.CharField(max_length=255, unique=True)  # Ensure the title is unique
-    description = models.TextField()
-    content = models.TextField()
-    url = models.URLField(max_length=500)
-    image = models.URLField(max_length=500, null=True, blank=True)
-    published_at = models.DateTimeField()
-    source_name = models.CharField(max_length=255)
-    source_url = models.URLField(max_length=500)
+    unique_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)  # Add unique_id field
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    content = models.TextField(blank=True)
+    url = models.URLField(blank=True)
+    image = models.URLField(blank=True)
+    published_at = models.DateTimeField(blank=True, null=True)
+    source_name = models.CharField(max_length=255, blank=True)
+    source_url = models.URLField(blank=True)
 
     def __str__(self):
         return self.title
