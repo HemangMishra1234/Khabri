@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
 
                     }
                     composable<PrimaryNavigation.MainScreen> {
-                        MainScreen(feedViewModel)
+                        MainScreen(feedViewModel,newsWritingViewModel)
                     }
 
                     composable<PrimaryNavigation.OnBoardingScreen> {

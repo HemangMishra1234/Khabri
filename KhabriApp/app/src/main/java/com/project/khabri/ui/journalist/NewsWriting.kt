@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import com.project.khabri.R
 
 
@@ -56,8 +57,9 @@ enum class NewsCategories(val value: String, val displayName: String, val icon: 
 
 @Composable
 fun NewsWriting(
-    onClickFeedback: () -> Unit,
-    onClickPost: () -> Unit
+    onClickFeedback: () -> Unit = {},
+    onClickPost: () -> Unit = {},
+    viewModel: NewsWritingViewModel
 ) {
 
     var isScreenImprove by remember {
@@ -195,7 +197,6 @@ fun WriteScreen() {
 }
 
 
-
 @Composable
 fun ImproveScreen() {
     Text(text = "This is improve screen.")
@@ -205,5 +206,5 @@ fun ImproveScreen() {
 @Preview
 @Composable
 fun PreviewNewsWriting() {
-    NewsWriting({}, {})
+
 }
