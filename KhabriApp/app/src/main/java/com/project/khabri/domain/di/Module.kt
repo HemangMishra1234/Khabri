@@ -7,7 +7,6 @@ import com.project.khabri.domain.remote.NewsAPI
 import com.project.khabri.domain.repositories.AuthenticationService
 import com.project.khabri.domain.repositories.AuthenticationServiceImpl
 import com.project.khabri.domain.repositories.NewsRepository
-import com.project.khabri.domain.repositories.NewsRepositoryImpl
 import com.project.khabri.domain.repositories.NewsRepositoryImplFake
 import com.project.khabri.domain.repositories.SavedRepository
 import com.project.pattagobhi.ui.authentication.createAccount.CreateAccountViewModel
@@ -17,7 +16,7 @@ import com.project.khabri.domain.repositories.SavedRepositoryImpl
 import com.project.khabri.domain.repositories.UserRepo
 import com.project.khabri.ui.feed.FeedViewModel
 import com.project.khabri.ui.journalist.NewsWritingViewModel
-import com.project.pattagobhi.data.remote.HttpRoutes
+import com.project.khabri.data.remote.HttpRoutes
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 import retrofit2.Retrofit
