@@ -2,8 +2,6 @@ package com.project.khabri.domain.repositories
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.project.khabri.domain.APIResponse
-import com.project.khabri.domain.ArticlesError
 import com.project.khabri.domain.data.UserData
 import com.project.khabri.domain.remote.NewsAPI
 import retrofit2.HttpException
@@ -13,7 +11,7 @@ class UserRepo(val auth: FirebaseAuth, val api: NewsAPI) {
         val email = auth.currentUser?.email
         val name = auth.currentUser?.displayName
         val id = auth.currentUser?.uid
-        if(email == null || name == null || id == null) {
+        if (email == null || name == null || id == null) {
             Log.i("error", "user not logged in")
             return
         }
@@ -21,7 +19,8 @@ class UserRepo(val auth: FirebaseAuth, val api: NewsAPI) {
             UserData(
                 email = email,
                 name = name,
-                id = id
+                id = id,
+                isJournalist = true
             )
         )
         Log.i("response", "$response")
