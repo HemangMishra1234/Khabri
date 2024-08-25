@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Scaffold
@@ -52,16 +53,16 @@ fun OnBoardingScreen(navController: NavController) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Logo(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
+                    modifier = Modifier.padding(start = 16.dp)
                 )
             }
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
                     .widthIn(min = 300.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(160.dp))      
+                Spacer(modifier = Modifier.height(160.dp))
                 AnimatedCenterBox(
                     screen = screen, modifier = Modifier
                         .align(Alignment.End)
@@ -78,6 +79,7 @@ fun OnBoardingScreen(navController: NavController) {
                         1 -> {
                             screen++
                         }
+
                         2 -> screen++
                         3 -> {
                             navController.navigate(AuthenticationNavigation.LoginScreen)
@@ -90,15 +92,16 @@ fun OnBoardingScreen(navController: NavController) {
     }
 }
 
+
 @Composable
 private fun Logo(modifier: Modifier) {
+
     Image(
-        painter = painterResource(id = R.drawable.logo_name),
+        painter = painterResource(id = R.drawable.bird_icon_bg_remove),
         contentDescription = null,
         modifier = modifier
             .padding(1.dp)
-            .width(77.dp)
-            .height(64.dp)
+            .size(100.dp)
     )
 }
 
@@ -106,7 +109,7 @@ private fun Logo(modifier: Modifier) {
 @Composable
 private fun ImageGroupS1(modifier: Modifier) {
     Image(
-        painter = painterResource(id = R.drawable.doctorsgroup),
+        painter = painterResource(id = R.drawable.news1_removebg_preview),
         contentDescription = null,
         modifier = modifier
             .padding(1.dp)
@@ -127,12 +130,13 @@ private fun GroupCenterS1(modifier: Modifier) {
 @Composable
 private fun GroupCenterS2(modifier: Modifier) {
     Box(modifier = modifier.fillMaxWidth()) {
+//        Image(
+//            painter = painterResource(id = R.drawable.backs2), contentDescription = null,
+//            modifier = Modifier.fillMaxWidth()
+//        )
         Image(
-            painter = painterResource(id = R.drawable.backs2), contentDescription = null,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Image(
-            painter = painterResource(id = R.drawable.pillsgroup), contentDescription = null,
+            painter = painterResource(id = R.drawable.news2_removebg_preview),
+            contentDescription = null,
             modifier = Modifier.align(Alignment.Center)
         )
     }
@@ -141,9 +145,10 @@ private fun GroupCenterS2(modifier: Modifier) {
 @Composable
 private fun GroupCenterS3(modifier: Modifier) {
     Box(modifier = modifier) {
-        Image(painter = painterResource(id = R.drawable.backs3), contentDescription = null)
+//        Image(painter = painterResource(id = R.drawable.backs3), contentDescription = null)
         Image(
-            painter = painterResource(id = R.drawable.run_group), contentDescription = null,
+            painter = painterResource(id = R.drawable.news3_removebg_preview),
+            contentDescription = null,
             modifier = Modifier
                 .align(Alignment.Center)
                 .height(250.dp)
@@ -167,7 +172,7 @@ private fun NonAnimatedCenterS1(modifier: Modifier) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Welcome to Durust!",
+            text = "Welcome to Khabri!",
             style = TextStyle(
                 fontSize = 24.sp,
                 lineHeight = 48.sp,
@@ -177,7 +182,7 @@ private fun NonAnimatedCenterS1(modifier: Modifier) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Your ultimate companion for getting better and achieving optimal health. Let’s begin your journey to wellness!",
+            text = "Get the latest headlines and breaking news delivered straight to your device to can quickly catch up on what matters most. Never miss a beat!",
             style = TextStyle(
                 fontSize = 16.sp,
                 lineHeight = 21.sp,
@@ -205,7 +210,7 @@ private fun NonAnimatedCenterS2(modifier: Modifier) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Track your Health ",
+            text = "Empower Yourself with Truth",
             style = TextStyle(
                 fontSize = 24.sp,
                 lineHeight = 48.sp,
@@ -215,7 +220,7 @@ private fun NonAnimatedCenterS2(modifier: Modifier) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Monitor your vitals, set health goals, and keep an eye on your overall well-being. ",
+            text = "Identify potentially misleading content and fake news, ensuring you always stay informed with accurate information.",
             style = TextStyle(
                 fontSize = 16.sp,
                 lineHeight = 21.sp,
@@ -244,7 +249,7 @@ private fun NonAnimatedCenterS3(modifier: Modifier) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Fitness Plans",
+            text = "Elevate Your Writing with AI",
             style = TextStyle(
                 fontSize = 24.sp,
                 lineHeight = 48.sp,
@@ -254,7 +259,7 @@ private fun NonAnimatedCenterS3(modifier: Modifier) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Discover workout routines tailored to your fitness level and goals. ",
+            text = "Our AI-assisted writing feature helps you craft compelling stories with ease. From generating ideas to refining your drafts, you can produce high-quality content faster than ever!",
             style = TextStyle(
                 fontSize = 16.sp,
                 lineHeight = 21.sp,
