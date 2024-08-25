@@ -1,6 +1,7 @@
-package com.project.pattagobhi.domain
+package com.project.khabri.domain
 
-typealias RootError = Error
+
+typealias RootError = APIError
 
 sealed interface Resource<out D, out E : RootError> {
     data class Success<out D, out E : RootError>(val data: D) : Resource<D, E>

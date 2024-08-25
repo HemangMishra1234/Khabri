@@ -1,4 +1,4 @@
-    package com.project.khabri.ui.authentication.components
+    package com.project.khabri.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

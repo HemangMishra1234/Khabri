@@ -16,7 +16,6 @@ import com.project.khabri.R
 import com.project.khabri.domain.repositories.AuthenticationService
 import com.project.khabri.domain.repositories.AuthenticationServiceImpl
 import com.project.pattagobhi.ui.authentication.AuthenticationNavigation
-import com.project.pattagobhi.ui.authentication.login.LoginUiState
 import kotlinx.coroutines.launch
 import java.security.MessageDigest
 import java.util.UUID

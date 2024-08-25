@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.project.khabri.R
 import com.project.pattagobhi.ui.components.AppButton
-import com.project.khabri.ui.authentication.components.AppTextField
+import com.project.khabri.ui.components.AppTextField
 import com.project.khabri.ui.authentication.login.LoginViewModel
 import com.project.pattagobhi.ui.components.DividerWithText
 import com.project.pattagobhi.ui.components.Wait
