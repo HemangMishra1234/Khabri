@@ -1,19 +1,26 @@
 from django.shortcuts import render
-import requests
 from django.http import JsonResponse
-from .config import GNEWS_API_KEY
-from django.http import HttpResponse
-from .models import News
 from django.views.decorators.csrf import csrf_exempt
+import requests
+from .config import GNEWS_API_KEY
+from .models import News, UserData
 
 
 def home(request):
-    return HttpResponse("Welcome to the News App! Visit /news/ for the latest news.")
+    return JsonResponse({"message": "Welcome to the News App! Visit /news/ for the latest news."})
 
 def get_news(request):
     url = f'https://gnews.io/api/v4/top-headlines?token={GNEWS_API_KEY}&lang=en'
     response = requests.get(url)
+    
+    if response.status_code != 200:
+        return JsonResponse({"error": "Failed to fetch news."}, status=response.status_code)
+    
     data = response.json()
+
+    # Handle cases where 'articles' might not be in the response
+    if 'articles' not in data:
+        return JsonResponse({"error": "Invalid response structure."}, status=500)
 
     # Save news articles to the database
     for article in data['articles']:
@@ -25,11 +32,55 @@ def get_news(request):
             image=article.get('image', ''),
             published_at=article['publishedAt'],
             source_name=article['source']['name'],
-            source_url=article['source']['url'],
+            source_url=article['source'].get('url', ''),
         )
-    
-        
 
-    # Optionally return the news data as a JSON response
     return JsonResponse(data['articles'], safe=False)
+
+@csrf_exempt
+def create_user(request):
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        is_journalist = request.POST.get('is_journalist') == 'true'
+
+        if not id or not name or not email:
+            return JsonResponse({"error": "Missing required fields."}, status=400)
+
+        try:
+            user_data = UserData.objects.get(id=id)
+            user_data.name = name
+            user_data.email = email
+            user_data.is_journalist = is_journalist
+            user_data.save()
+            message = "User updated successfully."
+        except UserData.DoesNotExist:
+            user_data = UserData.objects.create(
+                id=id,
+                name=name,
+                email=email,
+                is_journalist=is_journalist
+            )
+            message = "User created successfully."
+
+        return JsonResponse({
+            'id': user_data.id,
+            'name': user_data.name,
+            'email': user_data.email,
+            'is_journalist': user_data.is_journalist,
+            'message': message
+        }, status=201)
+
+    elif request.method == 'GET':
+        user = UserData.objects.all().values()
+        context = {"user":list(user)}
+        return JsonResponse(context, safe=False)
+
+
+    return JsonResponse({"error": "Only POST and GET requests are allowed."}, status=400)
+
+def list_users(request):
+    users = UserData.objects.all().values('id', 'name', 'email', 'is_journalist')
+    return JsonResponse(list(users), safe=False)
 

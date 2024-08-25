@@ -14,6 +14,7 @@ import com.project.pattagobhi.ui.authentication.createAccount.CreateAccountViewM
 import com.project.pattagobhi.ui.authentication.emailVerification.EmailVerificationViewModel
 import com.project.khabri.ui.authentication.login.LoginViewModel
 import com.project.khabri.domain.repositories.SavedRepositoryImpl
+import com.project.khabri.domain.repositories.UserRepo
 import com.project.khabri.ui.feed.FeedViewModel
 import com.project.khabri.ui.journalist.NewsWritingViewModel
 import com.project.pattagobhi.data.remote.HttpRoutes
@@ -55,6 +56,9 @@ val pattagobhiModules = module {
     single<NewsRepository> {
         //Now I can access it directly
         NewsRepositoryImplFake()
+    }
+    single {
+        UserRepo(get(), get())
     }
 
 

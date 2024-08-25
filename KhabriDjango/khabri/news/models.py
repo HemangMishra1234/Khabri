@@ -11,19 +11,31 @@ class News(models.Model):
     published_at = models.DateTimeField(blank=True, null=True)
     source_name = models.CharField(max_length=255, blank=True)
     source_url = models.URLField(blank=True)
-    country = models.CharField(max_length=255, blank=True)  # Add country field
-    category = models.CharField(max_length=255, blank=True)  # Add category field
+    country = models.CharField(max_length=255, blank=True)
+    category = models.CharField(max_length=255, blank=True)
+    is_real = models.DecimalField(max_digits=4, decimal_places=3, default=1.0)  # Changed to DecimalField
 
     def __str__(self):
         return self.title
+    
+class UserData(models.Model):
+    id = models.AutoField(primary_key=True)  # Automatically incrementing primary key field
+    name = models.CharField(max_length=255)  # Name field
+    email = models.EmailField(unique=True)   # Email field with unique constraint
+    is_journalist = models.BooleanField(default=False)  # Boolean field to indicate if the user is a journalist
+
+    def __str__(self):
+        return self.name
+    
 
 class ArticleInteraction(models.Model):
     article = models.ForeignKey(News, on_delete=models.CASCADE, related_name='interactions')
-    user_id = models.CharField(max_length=255)  # String field for user_id
+    user_id = models.ForeignKey(UserData, on_delete=models.CASCADE, related_name='user_data_id')  # String field for user_id
     is_liked = models.BooleanField(default=False)
-    time_spent = models.FloatField(default=0)  # Time spent in seconds
+    is_opened = models.BooleanField(default=False)
     is_reported = models.BooleanField(default=False)
-    no_of_views = models.PositiveIntegerField(default=0)  # Number of views
 
     def __str__(self):
         return f'Interaction by {self.user_id} on {self.article.title}'
+
+

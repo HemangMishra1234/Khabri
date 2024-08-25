@@ -9,11 +9,10 @@ class Command(BaseCommand):
     help = 'Fetch news from GNews API, store in the database, and export to CSV'
 
     def handle(self, *args, **kwargs):
-        api_key = '21095d221849c6d5fa8db76b312b1219'  # Replace with your actual API key
+        api_key = '1bf3c4ff70752e72a5c0ec9fdcd5941e'  # Replace with your actual API key
         api_url = 'https://gnews.io/api/v4/top-headlines'
         
         categories = ['general', 'world', 'nation', 'business', 'technology', 'entertainment', 'sports', 'science', 'health']
-        country = 'ca'  # Set your country code here
         all_articles = []
         csv_file_path = 'news_data.csv'
         
@@ -24,7 +23,7 @@ class Command(BaseCommand):
             params = {
                 'apikey': api_key,
                 'lang': 'en',
-                'country': country,
+                'country': 'il',  # Change this to the relevant country code or loop through if needed
                 'category': category,
                 'max': 100
             }
@@ -45,8 +44,9 @@ class Command(BaseCommand):
                         'published_at': article.get('publishedAt', ''),
                         'source_name': article['source'].get('name', ''),
                         'source_url': article['source'].get('url', ''),
-                        'country': country,  # Include country
-                        'category': category  # Include category
+                        'country': 'il',  # Change this to the relevant country code
+                        'category': category,
+                        'is_real': '1.000'  # Default value for demonstration
                     })
                     
                     # Try to create or update the news item
@@ -61,8 +61,9 @@ class Command(BaseCommand):
                             'published_at': article.get('publishedAt', ''),
                             'source_name': article['source'].get('name', ''),
                             'source_url': article['source'].get('url', ''),
-                            'country': country,  # Set country
-                            'category': category  # Set category
+                            'country': 'il',  # Change this to the relevant country code
+                            'category': category,
+                            'is_real': 1.0  # Default value for demonstration
                         }
                     )
                     if created:
@@ -76,7 +77,7 @@ class Command(BaseCommand):
         # Append new articles to the existing CSV file
         with open(csv_file_path, mode='a', newline='', encoding='utf-8') as file:
             writer = csv.DictWriter(file, fieldnames=[
-                'unique_id', 'title', 'description', 'content', 'url', 'image', 'published_at', 'source_name', 'source_url', 'country', 'category'
+                'unique_id', 'title', 'description', 'content', 'url', 'image', 'published_at', 'source_name', 'source_url', 'country', 'category', 'is_real'
             ])
             
             # Write the header only if the file is new

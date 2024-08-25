@@ -4,11 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.google.firebase.auth.FirebaseAuth
+import com.project.khabri.domain.repositories.UserRepo
 import com.project.khabri.ui.authentication.login.LoginViewModel
 import com.project.khabri.ui.theme.KhabriTheme
 import com.project.pattagobhi.ui.authentication.AuthenticationNavigation
@@ -25,6 +27,7 @@ import com.project.pattagobhi.ui.navigation.PrimaryNavigation
 import com.project.khabri.ui.authentication.onboarding.OnBoardingScreen
 import com.project.khabri.ui.feed.FeedViewModel
 import com.project.khabri.ui.journalist.NewsWritingViewModel
+import kotlinx.coroutines.launch
 
 
 import org.koin.android.ext.android.inject
@@ -35,6 +38,7 @@ class MainActivity : ComponentActivity() {
     val createAccountViewModel by inject<CreateAccountViewModel>()
     val feedViewModel by inject<FeedViewModel>()
     val newsWritingViewModel by inject<NewsWritingViewModel>()
+    val userRepo by inject<UserRepo>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +86,10 @@ class MainActivity : ComponentActivity() {
 
                     }
                     composable<PrimaryNavigation.MainScreen> {
+                        val scope = rememberCoroutineScope()
+                        scope.launch {
+                            userRepo.pushUserData()
+                        }
                         MainScreen(feedViewModel,newsWritingViewModel)
                     }
 
