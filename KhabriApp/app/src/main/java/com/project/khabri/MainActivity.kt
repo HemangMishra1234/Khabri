@@ -24,6 +24,7 @@ import com.project.khabri.ui.home.MainScreen
 import com.project.pattagobhi.ui.navigation.PrimaryNavigation
 import com.project.khabri.ui.authentication.onboarding.OnBoardingScreen
 import com.project.khabri.ui.feed.FeedViewModel
+import com.project.khabri.ui.journalist.NewsWritingViewModel
 
 
 import org.koin.android.ext.android.inject
@@ -33,6 +34,7 @@ class MainActivity : ComponentActivity() {
     val emailVerificationViewModel by inject<EmailVerificationViewModel>()
     val createAccountViewModel by inject<CreateAccountViewModel>()
     val feedViewModel by inject<FeedViewModel>()
+    val newsWritingViewModel by inject<NewsWritingViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

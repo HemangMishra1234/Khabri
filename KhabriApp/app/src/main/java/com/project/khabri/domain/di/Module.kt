@@ -15,6 +15,7 @@ import com.project.pattagobhi.ui.authentication.emailVerification.EmailVerificat
 import com.project.khabri.ui.authentication.login.LoginViewModel
 import com.project.khabri.domain.repositories.SavedRepositoryImpl
 import com.project.khabri.ui.feed.FeedViewModel
+import com.project.khabri.ui.journalist.NewsWritingViewModel
 import com.project.pattagobhi.data.remote.HttpRoutes
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
@@ -68,5 +69,9 @@ val pattagobhiModules = module {
     }
     factory {
         FeedViewModel(get(), get())
+    }
+
+    factory {
+        NewsWritingViewModel()
     }
 }
