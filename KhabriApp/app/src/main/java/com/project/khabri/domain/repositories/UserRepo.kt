@@ -19,7 +19,8 @@ class UserRepo(val auth: FirebaseAuth, val api: NewsAPI) {
             UserData(
                 email = email,
                 name = name,
-                id = id
+                id = id,
+                isJournalist = true
             )
         )
         Log.i("response", "$response")
