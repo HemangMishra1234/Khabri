@@ -200,7 +200,7 @@ fun VerificationSuccess(navController: NavController) {
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.07f))
                 Image(
-                    painter = painterResource(id = R.drawable.logo_name),
+                    painter = painterResource(id = R.drawable.bird_icon_bg_remove),
                     contentDescription = "logo + name",
                     colorFilter = ColorFilter.tint(Color(0xffeef6f8)),
                     modifier = Modifier
