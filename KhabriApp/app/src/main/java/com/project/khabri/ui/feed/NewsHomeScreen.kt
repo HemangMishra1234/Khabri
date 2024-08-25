@@ -11,6 +11,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -229,48 +230,66 @@ fun CategoryChip(
 
 @Composable
 private fun TopSearchBar(onSearch: (String) -> Unit, categories: NewsCategories) {
-    var query by remember {
-        mutableStateOf("")
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 4.dp)
-    ) {
-        OutlinedTextField(
-            value = query, onValueChange = { query = it },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    onSearch(query)
-                },
-            ),
-            shape = RoundedCornerShape(32.dp),
-            modifier = Modifier
-                .fillMaxWidth(), leadingIcon = {
-                Icon(imageVector = Icons.Default.Search, contentDescription = null)
-            },
-            placeholder = {
-                InfiniteTextTransition(categories = categories)
-            },
-            trailingIcon = {
-                Box(
-                    modifier = Modifier
-                        .size(30.dp)
-                        .clip(CircleShape)
-                        .background(Color.White),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.newspaper_5479355),
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-            }
+    Row(
+        modifier = Modifier.padding(start = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
 
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.bird_icon_bg_remove),
+            contentDescription = null,
+            modifier = Modifier
+                .size(56.dp)
+        )
+        Text(
+            text = "khabri",
+            modifier = Modifier.padding(start = 8.dp),
+            style = MaterialTheme.typography.headlineLarge
         )
     }
+//    var query by remember {
+//        mutableStateOf("")
+//    }
+//    Box(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 4.dp)
+//    ) {
+//        OutlinedTextField(
+//            value = query, onValueChange = { query = it },
+//            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+//            keyboardActions = KeyboardActions(
+//                onSearch = {
+//                    onSearch(query)
+//                },
+//            ),
+//            shape = RoundedCornerShape(32.dp),
+//            modifier = Modifier
+//                .fillMaxWidth(), leadingIcon = {
+//                Icon(imageVector = Icons.Default.Search, contentDescription = null)
+//            },
+//            placeholder = {
+//                InfiniteTextTransition(categories = categories)
+//            },
+//            trailingIcon = {
+//                Box(
+//                    modifier = Modifier
+//                        .size(30.dp)
+//                        .clip(CircleShape)
+//                        .background(Color.White),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Image(
+//                        painter = painterResource(id = R.drawable.bird_icon_bg_remove),
+//                        contentDescription = null,
+//                        modifier = Modifier.size(20.dp)
+//                    )
+//                }
+//            }
+//
+//        )
+//    }
+//}
 }
 
 @Composable

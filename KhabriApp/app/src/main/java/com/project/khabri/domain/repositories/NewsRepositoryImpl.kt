@@ -212,4 +212,8 @@ class NewsRepositoryImpl(private val api: NewsAPI) : NewsRepository {
             APIResponse.Error(ArticlesError.NetworkError.UNKNOWN)
         }
     }
+
+    override suspend fun getScienceNews(): APIResponse<List<Article>, ArticlesError> {
+        TODO("Not yet implemented")
+    }
 }

@@ -1,4 +1,4 @@
-package com.project.pattagobhi.ui.home
+package com.project.khabri.ui.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,13 +11,17 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import com.project.khabri.ui.feed.ListView
+import com.project.khabri.ui.feed.FeedViewModel
+import com.project.khabri.ui.feed.HomeScreen
+import com.project.pattagobhi.ui.home.NavigationItem
 import kotlinx.coroutines.launch
 
 @Composable
-fun MainScreen(){
+fun MainScreen(viewModel: FeedViewModel){
+    val uiState by viewModel.uiState
     val pagerState = rememberPagerState(pageCount = {
         NavigationItem.entries.size
     })
@@ -25,7 +29,7 @@ fun MainScreen(){
     Scaffold(
         bottomBar = {
             NavigationBar {
-                NavigationItem.entries.forEachIndexed(){index,item->
+                NavigationItem.entries.forEachIndexed(){ index, item->
                     NavigationBarItem(selected = pagerState.currentPage==index , onClick = { scope.launch {
                         pagerState.animateScrollToPage(index)
                     } }, icon = {
@@ -48,7 +52,9 @@ fun MainScreen(){
 
             HorizontalPager(state = pagerState) {page->
                 when(NavigationItem.entries[page]){
-                    NavigationItem.HOME -> HomeScreen()
+                    NavigationItem.HOME -> HomeScreen(Modifier,uiState.articles,viewModel){
+                        viewModel.likeArticle(it)
+                    }
                     NavigationItem.PROFILE -> Profile()
                     NavigationItem.CALENDER -> Calender()
                 }
@@ -59,14 +65,6 @@ fun MainScreen(){
     }
 }
 
-@Composable
-fun HomeScreen(){
-    Box(modifier = Modifier.fillMaxSize()){
-        ListView(articles = , viewModel = , modifier = , saveArticle = , unSaveArticle = ) {
-            
-        }
-    }
-}
 
 @Composable
 fun Profile(){
