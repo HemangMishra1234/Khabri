@@ -90,13 +90,16 @@ def list_users(request):
     return JsonResponse(list(users), safe=False)
 
 
-def store_recommended_articles(user, article_ids):
+@csrf_exempt
+def store_recommended_articles(user_id, article_ids):
     recommended_articles = []
+    user=UserData.objects.get(pk=user_id)
+    article=News.objects.get(pk=article_ids)
     
     for article_id in article_ids:
         try:
             news_article = News.objects.get(id=article_id)
-            recommended_article = RecommendedArticle(user=user, news=news_article)
+            recommended_article = RecommendedArticle(user=user_id, news=news_article)
             recommended_articles.append(recommended_article)
         except News.DoesNotExist:
             # Handle the case where the article ID doesn't exist
