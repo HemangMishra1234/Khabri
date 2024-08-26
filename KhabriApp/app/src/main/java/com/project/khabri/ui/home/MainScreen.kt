@@ -19,7 +19,7 @@ import com.project.khabri.ui.feed.HomeScreen
 import com.project.khabri.ui.journalist.NewsWriting
 import com.project.khabri.ui.journalist.NewsWritingViewModel
 import com.project.khabri.ui.profile.Profile
-import com.project.pattagobhi.ui.home.NavigationItem
+import com.project.khabri.ui.shorts.NewsScreen
 import kotlinx.coroutines.launch
 
 @Composable
@@ -58,8 +58,9 @@ fun MainScreen(viewModel: FeedViewModel,newsWritingViewModel: NewsWritingViewMod
                     NavigationItem.HOME -> HomeScreen(Modifier,uiState.articles,viewModel){
                         viewModel.likeArticle(it)
                     }
-                    NavigationItem.PROFILE -> Profile()
+                    NavigationItem.PROFILE -> Profile(viewModel)
                     NavigationItem.ADDNEWS -> NewsWriting(viewModel = newsWritingViewModel)
+                    NavigationItem.SHORTS -> NewsScreen()
                 }
 
             }

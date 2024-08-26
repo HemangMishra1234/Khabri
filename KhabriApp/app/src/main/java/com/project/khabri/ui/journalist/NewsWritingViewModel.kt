@@ -46,8 +46,7 @@ class NewsWritingViewModel() : ViewModel() {
 
     fun updateTitle(title: String) {
         _uiState.value = _uiState.value.copy(title = title)
-        _uiState.value = _uiState.value.copy(prompt = GeminiPrompts.WRITE_WITH_GEMINI.prompt+" "+title+" "+_uiState.value.tone+" "+_uiState.value.category)
-    }
+        }
 
     fun updatePrompt(prompt: String) {
         _uiState.value = _uiState.value.copy(prompt = prompt)
@@ -55,13 +54,11 @@ class NewsWritingViewModel() : ViewModel() {
 
     fun updateCategory(category: String) {
         _uiState.value = _uiState.value.copy(category = category)
-        _uiState.value = _uiState.value.copy(prompt = GeminiPrompts.WRITE_WITH_GEMINI.prompt+" "+_uiState.value.title+" "+_uiState.value.tone+" "+category)
-    }
+       }
 
     fun updateTone(tone: String) {
         _uiState.value = _uiState.value.copy(tone = tone)
-        _uiState.value = _uiState.value.copy(prompt = GeminiPrompts.WRITE_WITH_GEMINI.prompt+" "+_uiState.value.title+" "+tone+" "+_uiState.value.category)
-    }
+          }
 
     fun updateDescription(description: String) {
         _uiState.value = _uiState.value.copy(description = description)
@@ -77,6 +74,8 @@ class NewsWritingViewModel() : ViewModel() {
         if(currentPage == 1){
             sendImprovement()
         }
+        _uiState.value = _uiState.value.copy(prompt = GeminiPrompts.WRITE_WITH_GEMINI.prompt+" "+_uiState.value.title+" "+_uiState.value.tone+" "+_uiState.value.category)
+
     }
 
     fun updateImprovedDescription(description: String) {

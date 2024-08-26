@@ -11,7 +11,7 @@ import com.project.khabri.domain.data.Article
 import com.project.khabri.domain.data.NewsCategories
 import com.project.khabri.domain.repositories.NewsRepository
 import com.project.khabri.domain.repositories.SavedRepository
-import com.project.pattagobhi.ui.home.NavigationItem
+import com.project.khabri.ui.home.NavigationItem
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
