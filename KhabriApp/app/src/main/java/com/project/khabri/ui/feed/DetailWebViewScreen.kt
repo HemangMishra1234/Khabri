@@ -63,7 +63,7 @@ fun DetailsScreen(article: Article?, viewModel: FeedViewModel, onBack: () -> Uni
                             )
                         }
                         Text(
-                            text = article.sourceName,
+                            text = article.source_name,
                             style = MaterialTheme.typography.headlineSmall,
                             maxLines = 1,
                             modifier = Modifier.fillMaxWidth(0.6f)
@@ -105,7 +105,7 @@ fun DetailsScreen(article: Article?, viewModel: FeedViewModel, onBack: () -> Uni
                             ),
                         )
                         Text(
-                            text = TimeUtil.formatDateTime(article.publishedAt),
+                            text = TimeUtil.formatDateTime(article.published_at),
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = MaterialTheme.colorScheme.onSurface.copy(
                                     alpha = 0.6f
