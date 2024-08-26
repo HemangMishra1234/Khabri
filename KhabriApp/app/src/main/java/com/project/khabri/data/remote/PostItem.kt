@@ -10,7 +10,4 @@ data class PostItem(
     val title: String,
     val userId: Int
 ){
-    fun print(){
-
-    }
 }
