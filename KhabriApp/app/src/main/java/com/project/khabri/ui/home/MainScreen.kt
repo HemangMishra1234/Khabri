@@ -19,6 +19,8 @@ import com.project.khabri.ui.feed.HomeScreen
 import com.project.khabri.ui.journalist.NewsWriting
 import com.project.khabri.ui.journalist.NewsWritingViewModel
 import com.project.khabri.ui.profile.Profile
+import com.project.khabri.ui.shorts.NewsArticlePager
+import com.project.khabri.ui.shorts.NewsScreen
 import com.project.pattagobhi.ui.home.NavigationItem
 import kotlinx.coroutines.launch
 
@@ -60,6 +62,7 @@ fun MainScreen(viewModel: FeedViewModel,newsWritingViewModel: NewsWritingViewMod
                     }
                     NavigationItem.PROFILE -> Profile()
                     NavigationItem.ADDNEWS -> NewsWriting(onClickFeedback = {},viewModel = newsWritingViewModel)
+                    NavigationItem.SHORTS -> NewsScreen()
                 }
 
             }
