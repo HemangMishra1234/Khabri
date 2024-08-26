@@ -3,6 +3,7 @@ package com.project.khabri.ui.journalist
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -33,6 +34,7 @@ import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Science
 import androidx.compose.material.icons.filled.SportsCricket
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilledTonalButton
@@ -50,12 +52,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
 import com.project.khabri.R
 import com.project.khabri.ui.components.AppTextField
 
@@ -82,11 +87,11 @@ enum class ToneOfVoice(val displayName: String) {
 
 @Composable
 fun NewsWriting(
-    onClickFeedback: () -> Unit = {},
     viewModel: NewsWritingViewModel
 ) {
     val uiState by viewModel.uiState
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
     var isCategoryExpanded by remember {
         mutableStateOf(false)
     }
@@ -226,7 +231,7 @@ fun NewsWriting(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 OutlinedButton(
-                    onClick = { onClickFeedback() },
+                    onClick = { viewModel.improveGrammer() },
                     modifier = Modifier
                         .weight(1f)
 
@@ -236,7 +241,11 @@ fun NewsWriting(
                 Spacer(modifier = Modifier.width(4.dp))
                 Button(
                     onClick = {
-                        viewModel.uploadImageAndPost(uiState.image)
+                        if(uiState.image == null) {
+                            Log.i("NewsWriting", "Image is not null")
+                            return@Button
+                        }else
+                            viewModel.uploadImageAndPost(context = context, uiState.image!!)
                     }, modifier = Modifier
                         .weight(1f)
 
@@ -349,6 +358,24 @@ fun WriteScreen(
                 .fillMaxWidth()
                 .animateContentSize()
         )
+        
+        if(uiState.isLoading){
+            Column (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Spacer(modifier = Modifier.height(16.dp))
+                CircularProgressIndicator()
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
+        if(uiState.feedback.isNotEmpty()){
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "Feedback:", style = MaterialTheme.typography.titleMedium)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = uiState.feedback, modifier = Modifier.animateContentSize())
+        }
 
     }
 }
@@ -426,22 +453,42 @@ fun PreviewNewsWriting() {
 
 }
 
-// Add this function to handle image selection
+// Update the ImagePicker composable to pass the Uri to ImagePreview
 @Composable
 fun ImagePicker(
-    onImageSelected: (Bitmap) -> Unit
+    onImageSelected: (Uri) -> Unit
 ) {
     val context = LocalContext.current
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
-            val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
-            onImageSelected(bitmap)
+            selectedImageUri = it
+            onImageSelected(it)
         }
     }
 
-    Button(onClick = { launcher.launch("image/*") }) {
-        Text(text = "Select Image")
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Button(onClick = { launcher.launch("image/*") }) {
+            Text(text = "Select Image")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        selectedImageUri?.let {
+            ImagePreview(imageUri = it)
+        }
     }
+}
+
+// Update the ImagePreview composable to use Coil for loading the image from Uri
+@Composable
+fun ImagePreview(imageUri: Uri) {
+    AsyncImage(
+        model = imageUri,
+        contentDescription = null,
+        modifier = Modifier
+            .size(100.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+    )
 }

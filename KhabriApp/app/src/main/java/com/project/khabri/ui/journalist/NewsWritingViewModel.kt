@@ -1,7 +1,10 @@
 package com.project.khabri.ui.journalist
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -29,7 +32,7 @@ data class NewsWritingUIState(
     val improvedContent: String = "Your content will appear here...",
     val currentPage: Int = 0,
     val isLoading: Boolean=false,
-    val image: Bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+    val image: Uri? = null
 )
 
 class NewsWritingViewModel() : ViewModel() {
@@ -37,8 +40,8 @@ class NewsWritingViewModel() : ViewModel() {
     private val _uiState = mutableStateOf(NewsWritingUIState())
     val uiState: State<NewsWritingUIState> = _uiState
 
-    fun updateImage(bitmap: Bitmap) {
-        _uiState.value = _uiState.value.copy(image = bitmap)
+    fun updateImage(uri: Uri) {
+        _uiState.value = _uiState.value.copy(image = uri)
     }
 
     fun updateTitle(title: String) {
@@ -61,7 +64,7 @@ class NewsWritingViewModel() : ViewModel() {
     }
 
     fun updateDescription(description: String) {
-        _uiState.value = _uiState.value.copy(content = description)
+        _uiState.value = _uiState.value.copy(description = description)
 
     }
 
@@ -86,6 +89,25 @@ class NewsWritingViewModel() : ViewModel() {
         apiKey = "AIzaSyAHIgwWHzReB4PWkKZvRtLAl15DocFdOqI"
     )
 
+    fun improveGrammer(){
+        _uiState.value = _uiState.value.copy(isLoading = true)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = generativeModel.generateContent(
+                    content {
+                        text(GeminiPrompts.GRAMMER_IMPROVE.prompt+"  content is: "+_uiState.value.content + ", title is: "+_uiState.value.title + " and description is: "+_uiState.value.description)
+                    }
+                )
+                response.text?.let { outputContent ->
+                    _uiState.value = _uiState.value.copy(feedback = outputContent, isLoading = false)
+                }
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(feedback = e.localizedMessage ?: "", isLoading = false)
+            }
+        }
+    }
+
     fun sendImprovement(
 
     ) {
@@ -108,31 +130,29 @@ class NewsWritingViewModel() : ViewModel() {
     }
 
     // NewsWritingViewModel.kt
-    fun uploadImageAndPost(bitmap: Bitmap) {
-        uploadImageToFirebase(bitmap, onSuccess = { imageUrl ->
-            Log.i("News View Model", "Image uploaded successfully $imageUrl")
-        }, onFailure = { exception ->
-            // Handle the error
-            Log.i("News View Model", "Unable to upload image")
-        })
+    fun uploadImageAndPost(context: Context, imageUri: Uri) {
+        uploadImageToFirebase(context, imageUri){url->
+            Log.i("NewsWritingViewModel", "Image uploaded to Firebase: $url")
+
+        }
     }
 
 
     // NewsWritingViewModel.kt
-    private fun uploadImageToFirebase(bitmap: Bitmap, onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
-        val storageRef = FirebaseStorage.getInstance().reference.child("images/${UUID.randomUUID()}.jpg")
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val data = baos.toByteArray()
+    fun uploadImageToFirebase(context: Context, imageUri: Uri, onSuccess: (String)-> Unit) {
+        val storageReference = FirebaseStorage.getInstance().reference.child("images/${UUID.randomUUID()}.jpg")
 
-        val uploadTask = storageRef.putBytes(data)
-        uploadTask.addOnFailureListener { exception ->
-            onFailure(exception)
-        }.addOnSuccessListener {
-            storageRef.downloadUrl.addOnSuccessListener { uri ->
-                onSuccess(uri.toString())
+        storageReference.putFile(imageUri)
+            .addOnSuccessListener { taskSnapshot ->
+                // Get the download URL after the upload is successful
+                taskSnapshot.storage.downloadUrl.addOnSuccessListener { uri ->
+                    Toast.makeText(context, "Upload successful!", Toast.LENGTH_SHORT).show()
+                    onSuccess(uri.toString())
+                }
             }
-        }
+            .addOnFailureListener {
+                Toast.makeText(context, "Upload failed: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
 
