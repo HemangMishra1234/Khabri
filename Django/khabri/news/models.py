@@ -28,20 +28,10 @@ class UserData(models.Model):
         return self.name
     
 
-class ArticleInteraction(models.Model):
-    article = models.ForeignKey(News, on_delete=models.CASCADE, related_name='interactions')
-    user_id = models.ForeignKey(UserData, on_delete=models.CASCADE, related_name='user_data_id')  # String field for user_id
-    is_liked = models.BooleanField(default=False)
-    is_opened = models.BooleanField(default=False)
-    is_reported = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f'Interaction by {self.user_id} on {self.article.title}'
 
 
 class RecommendedArticle(models.Model):
-    
     user = models.ForeignKey(UserData, on_delete=models.CASCADE)
     news = models.ForeignKey(News, on_delete=models.CASCADE)
-    is_clicked = models.BooleanField(default=False)  # Track if the user clicked on it
+    is_liked = models.BooleanField(default=False)  # Track if the user clicked on it
 
