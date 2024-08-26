@@ -17,6 +17,7 @@ import com.project.khabri.domain.repositories.UserRepo
 import com.project.khabri.ui.feed.FeedViewModel
 import com.project.khabri.ui.journalist.NewsWritingViewModel
 import com.project.khabri.data.remote.HttpRoutes
+import com.project.khabri.domain.repositories.NewsRepositoryImpl
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -54,7 +55,8 @@ val pattagobhiModules = module {
     //This is how we use them
     single<NewsRepository> {
         //Now I can access it directly
-        NewsRepositoryImplFake()
+//        NewsRepositoryImplFake()
+        NewsRepositoryImpl(get())
     }
     single {
         UserRepo(get(), get())
