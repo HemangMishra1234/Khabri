@@ -118,6 +118,51 @@ def health(request):
     return JsonResponse({"error": "Only GET requests are allowed."}, status=400)
         
 
+@csrf_exempt
+def business(request):
+    if request.method == 'GET':
+        news = News.objects.filter(category='business').values()
+        context = {"news": list(news)}
+        return JsonResponse(context, safe=False)
+    return JsonResponse({"error": "Only GET requests are allowed."}, status=400)
+
+
+@csrf_exempt
+def entertainment(request):
+    if request.method == 'GET':
+        news = News.objects.filter(category='entertainment').values()
+        context = {"news": list(news)}
+        return JsonResponse(context, safe=False)
+    return JsonResponse({"error": "Only GET requests are allowed."}, status=400)
+
+
+@csrf_exempt
+def sports(request):
+    if request.method == 'GET':
+        news = News.objects.filter(category='sports').values()
+        context = {"news": list(news)}
+        return JsonResponse(context, safe=False)
+    return JsonResponse({"error": "Only GET requests are allowed."}, status=400)
+
+@csrf_exempt
+def technology(request):
+    if request.method == 'GET':
+        news = News.objects.filter(category='technology').values()
+        context = {"news": list(news)}
+        return JsonResponse(context, safe=False)
+    return JsonResponse({"error": "Only GET requests are allowed."}, status=400)
+
+
+@csrf_exempt
+def science(request):
+    if request.method == 'GET':
+        news = News.objects.filter(category='science').values()
+        context = {"news": list(news)}
+        return JsonResponse(context, safe=False)
+    return JsonResponse({"error": "Only GET requests are allowed."}, status=400)
+
+
+
         
 
 

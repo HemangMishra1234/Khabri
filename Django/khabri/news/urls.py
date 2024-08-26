@@ -9,4 +9,10 @@ urlpatterns = [
     path('news/', views.get_news, name='get_news'),
     path('user/',views.create_user, name='user'),
     path('health/',views.health, name='health'),
+    path('science/',views.science, name='science'),
+    path('technology/',views.technology, name='technology'),
+    path('business/',views.business, name='business'),
+    path('entertainment/',views.entertainment, name='entertainment'),
+    path('sports/',views.sports, name='sports'),
+    
 ]
