@@ -8,16 +8,19 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "article")
 @Parcelize
 data class Article(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    @PrimaryKey(autoGenerate = false)
+    val unique_id: String,
     val content: String,
     val description: String,
+    val category: String = "",
     val image: String,
-    val publishedAt: String,
-    val sourceName: String,
-    val sourceUrl: String,
+    val published_at: String,
+    val source_name: String,
+    val source_url: String,
+    val country: String,
     val title: String,
     val url: String,
+    val is_real: Float,
     val isLiked: Boolean = false,
     val isSaved: Boolean = false
 ): Parcelable

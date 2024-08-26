@@ -81,11 +81,11 @@ fun NewsCell(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Text(
-                    text = article.sourceName,
+                    text = article.source_name,
                     maxLines = 1,
                     style = MaterialTheme.typography.bodySmall
                 )
-                Text(text = " • ${TimeUtil.getTimeDiff(article.publishedAt)}", style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)))
+                Text(text = " • ${TimeUtil.getTimeDiff(article.published_at)}", style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)))
             }
             Buttons(
                 modifier = Modifier.align(Alignment.CenterEnd),
