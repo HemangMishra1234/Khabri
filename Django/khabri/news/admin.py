@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import News, ArticleInteraction
+from .models import News, ArticleInteraction, UserData
+
 
 class NewsAdmin(admin.ModelAdmin):
     list_display = ('title', 'published_at', 'source_name', 'is_real')
@@ -14,3 +15,4 @@ class ArticleInteractionAdmin(admin.ModelAdmin):
 
 admin.site.register(News, NewsAdmin)
 admin.site.register(ArticleInteraction, ArticleInteractionAdmin)
+admin.site.register(UserData)
