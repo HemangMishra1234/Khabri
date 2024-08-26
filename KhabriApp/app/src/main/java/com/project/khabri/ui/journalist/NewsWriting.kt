@@ -1,5 +1,12 @@
 package com.project.khabri.ui.journalist
 
+import android.graphics.Bitmap
+import android.net.Uri
+import android.provider.MediaStore
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,6 +35,7 @@ import androidx.compose.material.icons.filled.SportsCricket
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -43,11 +51,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.project.khabri.R
+import com.project.khabri.ui.components.AppTextField
 
 
 enum class NewsCategories(val value: String, val displayName: String, val icon: ImageVector) {
@@ -73,7 +83,6 @@ enum class ToneOfVoice(val displayName: String) {
 @Composable
 fun NewsWriting(
     onClickFeedback: () -> Unit = {},
-    onClickPost: () -> Unit = {},
     viewModel: NewsWritingViewModel
 ) {
     val uiState by viewModel.uiState
@@ -118,7 +127,7 @@ fun NewsWriting(
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
                             .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f))
-                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                            .padding(horizontal = 8.dp, vertical = 8.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
 
@@ -185,12 +194,13 @@ fun NewsWriting(
                             { viewModel.updateImprovedDescription(it) },
 
                             whenUseItClicked = {
-                                viewModel.updateDescription(uiState.improvedDescription)
+                                viewModel.updateDescription(uiState.improvedContent)
                                 viewModel.updateCurrentPage(0)
                             })
                     } else {
                         WriteScreen(
                             uiState,
+                            viewModel = viewModel,
                             onTitleChange = { viewModel.updateTitle(it) },
                             isCategoryExpanded = isCategoryExpanded,
                             onCategoryDismiss = { isCategoryExpanded = false },
@@ -200,7 +210,6 @@ fun NewsWriting(
                             onToneExpanded = { isToneExpanded = true },
                             onToneSelected = { viewModel.updateTone(it) },
                             onToneDismiss = { isToneExpanded = false },
-                            onDescriptionChange = { viewModel.updateDescription(it) }
                         )
                     }
                 }
@@ -226,7 +235,9 @@ fun NewsWriting(
                 }
                 Spacer(modifier = Modifier.width(4.dp))
                 Button(
-                    onClick = { onClickPost() }, modifier = Modifier
+                    onClick = {
+                        viewModel.uploadImageAndPost(uiState.image)
+                    }, modifier = Modifier
                         .weight(1f)
 
                 ) {
@@ -240,6 +251,7 @@ fun NewsWriting(
 @Composable
 fun WriteScreen(
     uiState: NewsWritingUIState,
+    viewModel: NewsWritingViewModel,
     onTitleChange: (String) -> Unit,
     isCategoryExpanded: Boolean,
     onCategoryDismiss: () -> Unit,
@@ -248,34 +260,40 @@ fun WriteScreen(
     onToneSelected: (String) -> Unit,
     onToneExpanded: () -> Unit,
     onToneDismiss: () -> Unit,
-    isToneExpanded: Boolean,
-    onDescriptionChange: (String) -> Unit
+    isToneExpanded: Boolean
 ) {
-    OutlinedTextField(value = uiState.title, onValueChange = { onTitleChange(it) }, label = {
-        Text(text = "Title")
-    }, modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 8.dp)
-    )
+    Column(modifier = Modifier.padding(horizontal = 4.dp)) {
+        AppTextField(
+            outerText = "Enter the title of your news",
+            value = uiState.title, onValueChange = { onTitleChange(it) },
+            icon = null,
+            placeholderText = "Title",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        AppTextField(
+            value = uiState.description, onValueChange = { viewModel.updateDescription(it) },
+            outerText = "Enter the description of your news",
+            placeholderText = "Description",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+            icon = null
+        )
+//    AppTextField(value = uiState, onValueChange = )
+//    OutlinedTextField(value = uiState.title, onValueChange = { onTitleChange(it) }, label = {
+//        Text(text = "Title")
+//    }, modifier = Modifier
+//        .fillMaxWidth()
+//        .padding(horizontal = 8.dp)
+//    )
 //    OutlinedTextField(value = uiState., onValueChange = )
-    Row(modifier = Modifier.padding(8.dp)) {
-        Text(text = "Category :")
-        Column {
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(MaterialTheme.colorScheme.primary)
-                    .border(3.dp, Color.White, RoundedCornerShape(16.dp))
-            ) {
-                Text(text = uiState.category,
-                    modifier = Modifier
-                        .clickable { onCategoryExpanded() }
-                        .padding(8.dp),
-                    color = Color.Black,
-                    textAlign = TextAlign.Center
-                )
+        Row {
+            FilledTonalButton(onClick = { onCategoryExpanded() }) {
+                Text(text = uiState.category)
             }
-
             DropdownMenu(expanded = isCategoryExpanded, onDismissRequest = onCategoryDismiss) {
                 NewsCategories.entries.forEach { category ->
                     DropdownMenuItem(
@@ -295,24 +313,10 @@ fun WriteScreen(
                 }
 
             }
-
-        }
-
-    }
-    Row(modifier = Modifier.padding(8.dp)) {
-        Text(text = "Tone Of Voice :")
-        Column {
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(MaterialTheme.colorScheme.primary)
-                    .border(3.dp, Color.White, RoundedCornerShape(16.dp))
-            ) {
-                Text(text = uiState.tone,
-                    modifier = Modifier
-                        .clickable { onToneExpanded() }
-                        .padding(8.dp),
-                    color = Color.Black,
+            Spacer(modifier = Modifier.width(8.dp))
+            FilledTonalButton(onClick = { onToneExpanded() }) {
+                Text(
+                    text = uiState.tone,
                     textAlign = TextAlign.Center
                 )
             }
@@ -331,18 +335,22 @@ fun WriteScreen(
                 }
 
             }
-
         }
+        Spacer(modifier = Modifier.height(16.dp))
+        ImagePicker(onImageSelected = { viewModel.updateImage(it) })
+        Spacer(modifier = Modifier.height(16.dp))
+
+        AppTextField(
+            icon = null,
+            outerText = "Enter the content of your news",
+            placeholderText = "Content",
+            value = uiState.content, onValueChange = { viewModel.updateContent(it) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize()
+        )
 
     }
-
-    OutlinedTextField(
-        value = uiState.content, onValueChange = { onDescriptionChange(it) },
-        label = {
-            Text(text = "Description")
-        }, modifier = Modifier.fillMaxWidth()
-    )
-
 }
 
 
@@ -353,7 +361,8 @@ fun ImproveScreen(
     onImprovedDescriptionChange: (String) -> Unit,
     whenUseItClicked: () -> Unit
 ) {
-    OutlinedTextField(value = uiState.prompt,
+    OutlinedTextField(
+        value = uiState.prompt,
         onValueChange = { viewModel.updatePrompt(uiState.prompt) },
         label = {
             Text(text = "Prompt")
@@ -363,16 +372,23 @@ fun ImproveScreen(
             .padding(horizontal = 8.dp)
     )
     Spacer(modifier = Modifier.height(16.dp))
-    OutlinedTextField(
-        value = uiState.improvedDescription,
-        onValueChange = { onImprovedDescriptionChange(it) },
-    label = {
-        Text(text = "Content")
-    },
-    modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 8.dp)
-    )
+    AnimatedVisibility(uiState.isLoading) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+
+        }
+    }
+    AnimatedVisibility(visible = !uiState.isLoading) {
+        OutlinedTextField(
+            value = uiState.improvedContent,
+            onValueChange = { onImprovedDescriptionChange(it) },
+            label = {
+                Text(text = "Content")
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        )
+    }
 
     Row(
         modifier = Modifier
@@ -408,4 +424,24 @@ fun ImproveScreen(
 @Composable
 fun PreviewNewsWriting() {
 
+}
+
+// Add this function to handle image selection
+@Composable
+fun ImagePicker(
+    onImageSelected: (Bitmap) -> Unit
+) {
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
+            onImageSelected(bitmap)
+        }
+    }
+
+    Button(onClick = { launcher.launch("image/*") }) {
+        Text(text = "Select Image")
+    }
 }

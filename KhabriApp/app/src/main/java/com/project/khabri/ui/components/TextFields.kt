@@ -38,7 +38,7 @@ fun AppTextField(
     modifier: Modifier = Modifier, value: String, onValueChange: (String) -> Unit,
     outerText: String = "Login with email",
     placeholderText: String = "Enter your email",
-    icon: ImageVector = Icons.Default.Email,
+    icon: ImageVector? = Icons.Default.Email,
     isError: Boolean = false,
     errorText: String = "Invalid Email Format",
     isPassword: Boolean = false,
@@ -84,7 +84,7 @@ fun AppTextField(
 @Composable
 fun LoginTextField(
     modifier: Modifier, placeholderText: String,
-    icon: ImageVector = Icons.Default.Email,
+    icon: ImageVector? = Icons.Default.Email,
     value: String, isError: Boolean,
     isPassword: Boolean, keyboardOptions: KeyboardOptions,
     errorText: String, onValueChange: (String) -> Unit,
@@ -112,6 +112,7 @@ fun LoginTextField(
         isError = isError,
         supportingText = { if (isError) Text(text = errorText) },
         leadingIcon = {
+            if(icon != null)
             Icon(
                 imageVector = icon, contentDescription = null,
 //                tint = Color(0xfffb8a7a),
