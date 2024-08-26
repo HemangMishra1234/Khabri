@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,7 +33,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,11 +44,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import com.project.khabri.R
 
 
@@ -185,7 +181,9 @@ fun NewsWriting(
                     if (uiState.currentPage == 1) {
                         ImproveScreen(
                             uiState,
+                            viewModel,
                             { viewModel.updateImprovedDescription(it) },
+
                             whenUseItClicked = {
                                 viewModel.updateDescription(uiState.improvedDescription)
                                 viewModel.updateCurrentPage(0)
@@ -253,12 +251,13 @@ fun WriteScreen(
     isToneExpanded: Boolean,
     onDescriptionChange: (String) -> Unit
 ) {
-    TextField(value = uiState.title, onValueChange = { onTitleChange(it) }, label = {
+    OutlinedTextField(value = uiState.title, onValueChange = { onTitleChange(it) }, label = {
         Text(text = "Title")
     }, modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 8.dp)
     )
+//    OutlinedTextField(value = uiState., onValueChange = )
     Row(modifier = Modifier.padding(8.dp)) {
         Text(text = "Category :")
         Column {
@@ -338,7 +337,7 @@ fun WriteScreen(
     }
 
     OutlinedTextField(
-        value = uiState.description, onValueChange = { onDescriptionChange(it) },
+        value = uiState.content, onValueChange = { onDescriptionChange(it) },
         label = {
             Text(text = "Description")
         }, modifier = Modifier.fillMaxWidth()
@@ -350,12 +349,30 @@ fun WriteScreen(
 @Composable
 fun ImproveScreen(
     uiState: NewsWritingUIState,
+    viewModel: NewsWritingViewModel,
     onImprovedDescriptionChange: (String) -> Unit,
     whenUseItClicked: () -> Unit
 ) {
+    OutlinedTextField(value = uiState.prompt,
+        onValueChange = { viewModel.updatePrompt(uiState.prompt) },
+        label = {
+            Text(text = "Prompt")
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp)
+    )
+    Spacer(modifier = Modifier.height(16.dp))
     OutlinedTextField(
         value = uiState.improvedDescription,
-        onValueChange = { onImprovedDescriptionChange(it) })
+        onValueChange = { onImprovedDescriptionChange(it) },
+    label = {
+        Text(text = "Content")
+    },
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 8.dp)
+    )
 
     Row(
         modifier = Modifier
@@ -366,7 +383,9 @@ fun ImproveScreen(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         OutlinedButton(
-            onClick = { },
+            onClick = {
+                viewModel.sendImprovement()
+            },
             modifier = Modifier
                 .weight(1f)
 
