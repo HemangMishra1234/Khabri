@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import News,UserData
+from .models import News,UserData,RecommendedArticle
 
 class NewsAdmin(admin.ModelAdmin):
     list_display = ('title', 'published_at', 'source_name', 'is_real')
@@ -10,3 +10,4 @@ class NewsAdmin(admin.ModelAdmin):
 
 admin.site.register(News, NewsAdmin)
 admin.site.register(UserData)
+admin.site.register(RecommendedArticle)
