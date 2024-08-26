@@ -1,5 +1,6 @@
 package com.project.khabri.ui.journalist
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -48,6 +49,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.project.khabri.R
+import com.project.khabri.ui.components.AppTextField
+import com.project.khabri.ui.components.LottieAnimationComposable
 
 
 enum class NewsCategories(val value: String, val displayName: String, val icon: ImageVector) {
@@ -118,7 +121,7 @@ fun NewsWriting(
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
                             .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f))
-                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                            .padding(horizontal = 8.dp, vertical = 8.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
 
@@ -251,6 +254,9 @@ fun WriteScreen(
     isToneExpanded: Boolean,
     onDescriptionChange: (String) -> Unit
 ) {
+    AppTextField(value = uiState.title, onValueChange = { onTitleChange(it) },
+        modifier = Modifier.fillMaxWidth()
+            .padding(horizontal = 8.dp))
     OutlinedTextField(value = uiState.title, onValueChange = { onTitleChange(it) }, label = {
         Text(text = "Title")
     }, modifier = Modifier
@@ -363,16 +369,23 @@ fun ImproveScreen(
             .padding(horizontal = 8.dp)
     )
     Spacer(modifier = Modifier.height(16.dp))
-    OutlinedTextField(
-        value = uiState.improvedDescription,
-        onValueChange = { onImprovedDescriptionChange(it) },
-    label = {
-        Text(text = "Content")
-    },
-    modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 8.dp)
-    )
+    AnimatedVisibility(uiState.isLoading){
+        Box(modifier = Modifier.fillMaxWidth()) {
+
+        }
+    }
+    AnimatedVisibility(visible =!uiState.isLoading){
+        OutlinedTextField(
+            value = uiState.improvedDescription,
+            onValueChange = { onImprovedDescriptionChange(it) },
+            label = {
+                Text(text = "Content")
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        )
+    }
 
     Row(
         modifier = Modifier

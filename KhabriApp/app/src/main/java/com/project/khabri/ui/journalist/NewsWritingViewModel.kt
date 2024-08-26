@@ -55,6 +55,9 @@ class NewsWritingViewModel() : ViewModel() {
 
     fun updateCurrentPage(currentPage: Int) {
         _uiState.value = _uiState.value.copy(currentPage = currentPage)
+        if(currentPage == 1){
+            sendImprovement()
+        }
     }
 
     fun updateImprovedDescription(description: String) {
