@@ -29,7 +29,7 @@ class NewsRepositoryImpl(private val api: NewsAPI) : NewsRepository {
             if (response.isSuccessful.not()) {
                 throw HttpException(response)
             }
-            val articleList = response.body()?.map { it.toArticle() } ?: throw Exception()
+            val articleList = response.body()?.news?.map { it.toArticle() } ?: throw Exception()
             Log.i("fetched", "$articleList")
             APIResponse.Success(articleList)
         } catch (e: HttpException) {
@@ -43,19 +43,19 @@ class NewsRepositoryImpl(private val api: NewsAPI) : NewsRepository {
                 APIResponse.Error(ArticlesError.NetworkError.UNKNOWN)
             }
         } catch (e: Exception) {
-            Log.i("hi", "h")
+            Log.i("hi", "h $e")
             APIResponse.Error(ArticlesError.NetworkError.UNKNOWN)
         }
     }
 
     override suspend fun getSportsNews(): APIResponse<List<Article>, ArticlesError> {
         return try {
-            val response = api.getHealthNews()
+            val response = api.getSportsNews()
             Log.i("response", "$response, ${response.body()}")
             if (response.isSuccessful.not()) {
                 throw HttpException(response)
             }
-            val articleList = response.body()?.map { it.toArticle() } ?: throw Exception()
+            val articleList = response.body()?.news?.map { it.toArticle() } ?: throw Exception()
             Log.i("fetched", "$articleList")
             APIResponse.Success(articleList)
         } catch (e: HttpException) {
@@ -69,7 +69,7 @@ class NewsRepositoryImpl(private val api: NewsAPI) : NewsRepository {
                 APIResponse.Error(ArticlesError.NetworkError.UNKNOWN)
             }
         } catch (e: Exception) {
-            Log.i("hi", "h")
+            Log.i("hi", "h $e")
             APIResponse.Error(ArticlesError.NetworkError.UNKNOWN)
         }
     }
@@ -83,10 +83,11 @@ class NewsRepositoryImpl(private val api: NewsAPI) : NewsRepository {
             if (response.isSuccessful.not()) {
                 throw HttpException(response)
             }
-            val articleList = response.body()?.map { it.toArticle() } ?: throw Exception()
+            val articleList = response.body()?.news?.map { it.toArticle() } ?: throw Exception()
             Log.i("fetched", "$articleList")
             APIResponse.Success(articleList)
         } catch (e: HttpException) {
+            Log.i("hi", "h$e")
             if (e.code() == 401) {
                 APIResponse.Error(ArticlesError.NetworkError.NO_INTERNET)
             } else if (e.code() == 408) {
@@ -106,15 +107,16 @@ class NewsRepositoryImpl(private val api: NewsAPI) : NewsRepository {
 
     ): APIResponse<List<Article>, ArticlesError> {
         return try {
-            val response = api.getHealthNews()
+            val response = api.getBusinessNews()
             Log.i("response", "$response, ${response.body()}")
             if (response.isSuccessful.not()) {
                 throw HttpException(response)
             }
-            val articleList = response.body()?.map { it.toArticle() } ?: throw Exception()
+            val articleList = response.body()?.news?.map { it.toArticle() } ?: throw Exception()
             Log.i("fetched", "$articleList")
             APIResponse.Success(articleList)
         } catch (e: HttpException) {
+            Log.i("hi", "h $e")
             if (e.code() == 401) {
                 APIResponse.Error(ArticlesError.NetworkError.NO_INTERNET)
             } else if (e.code() == 408) {
@@ -125,7 +127,7 @@ class NewsRepositoryImpl(private val api: NewsAPI) : NewsRepository {
                 APIResponse.Error(ArticlesError.NetworkError.UNKNOWN)
             }
         } catch (e: Exception) {
-            Log.i("hi", "h")
+            Log.i("hi", "h $e")
             APIResponse.Error(ArticlesError.NetworkError.UNKNOWN)
         }
     }
@@ -134,15 +136,16 @@ class NewsRepositoryImpl(private val api: NewsAPI) : NewsRepository {
 
     ): APIResponse<List<Article>, ArticlesError> {
         return try {
-            val response = api.getHealthNews()
+            val response = api.getEntertainmentNews()
             Log.i("response", "$response, ${response.body()}")
             if (response.isSuccessful.not()) {
                 throw HttpException(response)
             }
-            val articleList = response.body()?.map { it.toArticle() } ?: throw Exception()
+            val articleList = response.body()?.news?.map { it.toArticle() } ?: throw Exception()
             Log.i("fetched", "$articleList")
             APIResponse.Success(articleList)
         } catch (e: HttpException) {
+            Log.i("hi", "h $e")
             if (e.code() == 401) {
                 APIResponse.Error(ArticlesError.NetworkError.NO_INTERNET)
             } else if (e.code() == 408) {
@@ -153,7 +156,7 @@ class NewsRepositoryImpl(private val api: NewsAPI) : NewsRepository {
                 APIResponse.Error(ArticlesError.NetworkError.UNKNOWN)
             }
         } catch (e: Exception) {
-            Log.i("hi", "h")
+            Log.i("hi", "h $e")
             APIResponse.Error(ArticlesError.NetworkError.UNKNOWN)
         }
     }
@@ -162,15 +165,17 @@ class NewsRepositoryImpl(private val api: NewsAPI) : NewsRepository {
 
     ): APIResponse<List<Article>, ArticlesError> {
         return try {
-            val response = api.getHealthNews()
+
+            val response = api.getTechnologyNews()
             Log.i("response", "$response, ${response.body()}")
             if (response.isSuccessful.not()) {
                 throw HttpException(response)
             }
-            val articleList = response.body()?.map { it.toArticle() } ?: throw Exception()
+            val articleList = response.body()?.news?.map { it.toArticle() } ?: throw Exception()
             Log.i("fetched", "$articleList")
             APIResponse.Success(articleList)
         } catch (e: HttpException) {
+            Log.i("hi", "h $e")
             if (e.code() == 401) {
                 APIResponse.Error(ArticlesError.NetworkError.NO_INTERNET)
             } else if (e.code() == 408) {
@@ -181,22 +186,23 @@ class NewsRepositoryImpl(private val api: NewsAPI) : NewsRepository {
                 APIResponse.Error(ArticlesError.NetworkError.UNKNOWN)
             }
         } catch (e: Exception) {
-            Log.i("hi", "h")
+            Log.i("hi", "h $e")
             APIResponse.Error(ArticlesError.NetworkError.UNKNOWN)
         }
     }
 
     override suspend fun getRecommendedNews(uid: String): APIResponse<List<Article>, ArticlesError> {
         return try {
-            val response = api.getHealthNews()
+            val response = api.getRecommendedNews("")
             Log.i("response", "$response, ${response.body()}")
             if (response.isSuccessful.not()) {
                 throw HttpException(response)
             }
-            val articleList = response.body()?.map { it.toArticle() } ?: throw Exception()
+            val articleList = response.body()?.news?.map { it.toArticle() } ?: throw Exception()
             Log.i("fetched", "$articleList")
             APIResponse.Success(articleList)
         } catch (e: HttpException) {
+            Log.i("hi", "h $e")
             if (e.code() == 401) {
                 APIResponse.Error(ArticlesError.NetworkError.NO_INTERNET)
             } else if (e.code() == 408) {
@@ -207,7 +213,7 @@ class NewsRepositoryImpl(private val api: NewsAPI) : NewsRepository {
                 APIResponse.Error(ArticlesError.NetworkError.UNKNOWN)
             }
         } catch (e: Exception) {
-            Log.i("hi", "h")
+            Log.i("hi", "h $e")
             APIResponse.Error(ArticlesError.NetworkError.UNKNOWN)
         }
     }
@@ -219,10 +225,11 @@ class NewsRepositoryImpl(private val api: NewsAPI) : NewsRepository {
             if (response.isSuccessful.not()) {
                 throw HttpException(response)
             }
-            val articleList = response.body()?.map { it.toArticle() } ?: throw Exception()
+            val articleList = response.body()?.news?.map { it.toArticle() } ?: throw Exception()
             Log.i("fetched", "$articleList")
             APIResponse.Success(articleList)
         } catch (e: HttpException) {
+            Log.i("hi", "h $e")
             if (e.code() == 401) {
                 APIResponse.Error(ArticlesError.NetworkError.NO_INTERNET)
             } else if (e.code() == 408) {
@@ -233,7 +240,7 @@ class NewsRepositoryImpl(private val api: NewsAPI) : NewsRepository {
                 APIResponse.Error(ArticlesError.NetworkError.UNKNOWN)
             }
         } catch (e: Exception) {
-            Log.i("hi", "h")
+            Log.i("hi", "h $e")
             APIResponse.Error(ArticlesError.NetworkError.UNKNOWN)
         }
     }

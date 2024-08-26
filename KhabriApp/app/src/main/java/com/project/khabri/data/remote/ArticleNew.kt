@@ -1,5 +1,5 @@
 package com.project.khabri.data.remote
 
-data class Article(
+data class ArticleNew(
     val news: List<New>
 )

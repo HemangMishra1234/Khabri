@@ -9,7 +9,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.StarRate
 import androidx.compose.material.icons.filled.ThumbDown
 import androidx.compose.material.icons.filled.ThumbUp
@@ -23,30 +22,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
-import kotlinx.coroutines.launch
+import com.project.khabri.domain.data.Article
+import com.project.khabri.ui.feed.FeedViewModel
 
 @Composable
-fun NewsArticlePager(articles: List<Article>) {
-    val state = rememberPagerState(pageCount = { articles.size })
+fun NewsArticlePager(article2s: List<Article2>) {
+    val state = rememberPagerState(pageCount = { article2s.size })
     VerticalPager(
         state = state,
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
         flingBehavior = PagerDefaults.flingBehavior(state),
     ) { page ->
-        NewsArticleCard(article = articles[page])
+        NewsArticleCard(article2 = article2s[page])
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewsArticleCard(article: Article) {
+fun NewsArticleCard(article2: Article2) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -86,7 +85,7 @@ fun NewsArticleCard(article: Article) {
                             contentAlignment = Alignment.Center
                         ) {
                             Image(
-                                painter = rememberImagePainter(article.imageUrl),
+                                painter = rememberImagePainter(article2.imageUrl),
                                 contentDescription = "Article Image",
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
@@ -99,7 +98,7 @@ fun NewsArticleCard(article: Article) {
 
                         // Title
                         Text(
-                            text = article.title,
+                            text = article2.title,
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
                             maxLines = 1,
@@ -111,7 +110,7 @@ fun NewsArticleCard(article: Article) {
 
                         // Description
                         Text(
-                            text = article.description,
+                            text = article2.description,
                             fontSize = 14.sp,
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
@@ -135,7 +134,7 @@ fun NewsArticleCard(article: Article) {
 //            )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "${article.sourcesCount} sources",
+                                text = "${article2.sourcesCount} sources",
                                 fontSize = 14.sp,
                                 color = Color.Gray
                             )
@@ -165,7 +164,7 @@ fun NewsArticleCard(article: Article) {
 }
 
 // Sample Data Model
-data class Article(
+data class Article2(
     val title: String,
     val description: String,
     val imageUrl: String,
@@ -173,32 +172,32 @@ data class Article(
 )
 
 // Sample Data
-val sampleArticles = listOf(
-    Article(
+val sampleArticle2s = listOf(
+    Article2(
         title = "Keith Haring Mural Faces Demolition",
         description = "A beloved Keith Haring mural in Manhattan's West Village faces an uncertain future...",
         imageUrl = "https://link_to_image.com/image.jpg",
         sourcesCount = 4
     ),
-    Article(
+    Article2(
         title = "slknoinsdin",
         description = "oinsdiunsidbfds",
         imageUrl = "insdi",
         sourcesCount = 8852
     ),
-    Article(
+    Article2(
         title = "Keith Haring Mural Faces Demolition",
         description = "A beloved Keith Haring mural in Manhattan's West Village faces an uncertain future...",
         imageUrl = "https://link_to_image.com/image.jpg",
         sourcesCount = 4
     ),
-    Article(
+    Article2(
         title = "Keith Haring Mural Faces Demolition",
         description = "A beloved Keith Haring mural in Manhattan's West Village faces an uncertain future...",
         imageUrl = "https://link_to_image.com/image.jpg",
         sourcesCount = 4
     ),
-    Article(
+    Article2(
         title = "Keith Haring Mural Faces Demolition",
         description = "A beloved Keith Haring mural in Manhattan's West Village faces an uncertain future...",
         imageUrl = "https://link_to_image.com/image.jpg",
@@ -208,6 +207,21 @@ val sampleArticles = listOf(
 )
 
 @Composable
-fun NewsScreen() {
-    NewsArticlePager(articles = sampleArticles)
+fun NewsScreen(feedViewModel: FeedViewModel) {
+    val articles by feedViewModel.savedArticles.collectAsState(initial = emptyList())
+    val listOfArticle2 = articles.toArticle2List()
+    NewsArticlePager(article2s = listOfArticle2)
+}
+
+fun Article.toArticle2(): Article2 {
+    return Article2(
+        title = this.title,
+        description = this.description,
+        imageUrl = this.image,
+        sourcesCount = 1 // Assuming a default value for sourcesCount
+    )
+}
+
+fun List<Article>.toArticle2List(): List<Article2> {
+    return this.map { it.toArticle2() }
 }

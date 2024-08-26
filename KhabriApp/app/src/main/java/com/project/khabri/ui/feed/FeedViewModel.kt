@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 class FeedViewModel(
-    private val newsRepository: NewsRepository,
+    val newsRepository: NewsRepository,
     private val localRepository: SavedRepository
 ) : ViewModel() {
     val savedArticles = localRepository.getSavedArticles()

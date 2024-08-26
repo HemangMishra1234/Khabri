@@ -60,7 +60,7 @@ fun MainScreen(viewModel: FeedViewModel,newsWritingViewModel: NewsWritingViewMod
                     }
                     NavigationItem.PROFILE -> Profile(viewModel)
                     NavigationItem.ADDNEWS -> NewsWriting(viewModel = newsWritingViewModel)
-                    NavigationItem.SHORTS -> NewsScreen()
+                    NavigationItem.SHORTS -> NewsScreen(viewModel)
                 }
 
             }
