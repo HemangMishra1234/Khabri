@@ -18,6 +18,7 @@ import com.project.khabri.ui.feed.FeedViewModel
 import com.project.khabri.ui.feed.HomeScreen
 import com.project.khabri.ui.journalist.NewsWriting
 import com.project.khabri.ui.journalist.NewsWritingViewModel
+import com.project.khabri.ui.profile.Profile
 import com.project.pattagobhi.ui.home.NavigationItem
 import kotlinx.coroutines.launch
 
@@ -69,11 +70,11 @@ fun MainScreen(viewModel: FeedViewModel,newsWritingViewModel: NewsWritingViewMod
 }
 
 
-@Composable
-fun Profile(){
-    Box(modifier = Modifier.fillMaxSize())
-
-}
+//@Composable
+//fun Profile(){
+//    Box(modifier = Modifier.fillMaxSize())
+//
+//}
 
 @Composable
 fun Calender(){

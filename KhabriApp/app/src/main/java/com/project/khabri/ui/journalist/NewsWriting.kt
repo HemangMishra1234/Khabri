@@ -2,6 +2,7 @@ package com.project.khabri.ui.journalist
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,6 +46,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -139,7 +142,11 @@ fun NewsWriting(
 
 
                         ) {
-                            Text(text = "Write", modifier = Modifier.padding(vertical = 4.dp))
+                            Text(
+                                text = "Write", modifier = Modifier.padding(vertical = 4.dp),
+                                color = if (uiState.currentPage == 0) MaterialTheme.colorScheme.primaryContainer
+                                else Color.White
+                            )
                         }
                         Box(
                             modifier = Modifier
@@ -154,7 +161,9 @@ fun NewsWriting(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "Improve", modifier = Modifier.padding(vertical = 4.dp)
+                                text = "Improve", modifier = Modifier.padding(vertical = 4.dp),
+                                color = if (uiState.currentPage == 1) MaterialTheme.colorScheme.primaryContainer
+                                else Color.White
                             )
                         }
 
@@ -244,16 +253,30 @@ fun WriteScreen(
     isToneExpanded: Boolean,
     onDescriptionChange: (String) -> Unit
 ) {
-    OutlinedTextField(value = uiState.title, onValueChange = { onTitleChange(it) }, label = {
+    TextField(value = uiState.title, onValueChange = { onTitleChange(it) }, label = {
         Text(text = "Title")
-    })
+    }, modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 8.dp)
+    )
     Row(modifier = Modifier.padding(8.dp)) {
         Text(text = "Category :")
         Column {
-            Text(text = uiState.category,
+            Box(
                 modifier = Modifier
-                    .clickable { onCategoryExpanded() }
-            )
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.primary)
+                    .border(3.dp, Color.White, RoundedCornerShape(16.dp))
+            ) {
+                Text(text = uiState.category,
+                    modifier = Modifier
+                        .clickable { onCategoryExpanded() }
+                        .padding(8.dp),
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+                )
+            }
+
             DropdownMenu(expanded = isCategoryExpanded, onDismissRequest = onCategoryDismiss) {
                 NewsCategories.entries.forEach { category ->
                     DropdownMenuItem(
@@ -280,10 +303,20 @@ fun WriteScreen(
     Row(modifier = Modifier.padding(8.dp)) {
         Text(text = "Tone Of Voice :")
         Column {
-            Text(text = uiState.tone,
+            Box(
                 modifier = Modifier
-                    .clickable { onToneExpanded() }
-            )
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.primary)
+                    .border(3.dp, Color.White, RoundedCornerShape(16.dp))
+            ) {
+                Text(text = uiState.tone,
+                    modifier = Modifier
+                        .clickable { onToneExpanded() }
+                        .padding(8.dp),
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+                )
+            }
             DropdownMenu(expanded = isToneExpanded, onDismissRequest = onToneDismiss) {
                 ToneOfVoice.entries.forEach { tone ->
                     DropdownMenuItem(
@@ -304,10 +337,12 @@ fun WriteScreen(
 
     }
 
-    OutlinedTextField(value = uiState.description, onValueChange = { onDescriptionChange(it) },
+    OutlinedTextField(
+        value = uiState.description, onValueChange = { onDescriptionChange(it) },
         label = {
             Text(text = "Description")
-        })
+        }, modifier = Modifier.fillMaxWidth()
+    )
 
 }
 
