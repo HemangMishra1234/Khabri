@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-bu$bi!---nk6tk46+*bq*zzjva3hermgwcr#2b$!2t)p6&+d+0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1','your-render-subdomain.onrender.com']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','https://khabri.onrender.com']
 
 
 # Application definition
