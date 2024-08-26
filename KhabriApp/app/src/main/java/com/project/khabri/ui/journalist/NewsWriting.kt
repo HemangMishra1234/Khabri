@@ -390,7 +390,7 @@ fun ImproveScreen(
 ) {
     OutlinedTextField(
         value = uiState.prompt,
-        onValueChange = { viewModel.updatePrompt(uiState.prompt) },
+        onValueChange = { viewModel.updatePrompt(it) },
         label = {
             Text(text = "Prompt")
         },
