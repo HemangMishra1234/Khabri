@@ -59,7 +59,6 @@ fun MainScreen(viewModel: FeedViewModel,newsWritingViewModel: NewsWritingViewMod
                         viewModel.likeArticle(it)
                     }
                     NavigationItem.PROFILE -> Profile()
-                    NavigationItem.CALENDER -> Calender()
                     NavigationItem.ADDNEWS -> NewsWriting(onClickFeedback = {},viewModel = newsWritingViewModel)
                 }
 

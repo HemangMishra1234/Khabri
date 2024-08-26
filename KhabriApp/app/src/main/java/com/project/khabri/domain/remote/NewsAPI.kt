@@ -32,7 +32,7 @@ interface NewsAPI {
         @Query("user-id") uid: String
     ): Response<List<Article>>
 
-    @POST("update_user/")
+    @POST("user/")
     suspend fun updateUserData(@Body userData: UserData): Response<Void>
 
 

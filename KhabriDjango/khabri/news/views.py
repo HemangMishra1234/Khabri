@@ -2,8 +2,9 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import requests
+import json
 from .config import GNEWS_API_KEY
-from .models import News, UserData
+from .models import RecommendedArticle, News, UserData
 
 
 def home(request):
@@ -40,10 +41,15 @@ def get_news(request):
 @csrf_exempt
 def create_user(request):
     if request.method == 'POST':
-        id = request.POST.get('id')
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        is_journalist = request.POST.get('is_journalist') == 'true'
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON."}, status=400)
+
+        id = data.get('id')
+        name = data.get('name')
+        email = data.get('email')
+        is_journalist = data.get('is_journalist', False)  # default to False if not provided
 
         if not id or not name or not email:
             return JsonResponse({"error": "Missing required fields."}, status=400)
@@ -74,9 +80,8 @@ def create_user(request):
 
     elif request.method == 'GET':
         user = UserData.objects.all().values()
-        context = {"user":list(user)}
+        context = {"user": list(user)}
         return JsonResponse(context, safe=False)
-
 
     return JsonResponse({"error": "Only POST and GET requests are allowed."}, status=400)
 
@@ -84,3 +89,18 @@ def list_users(request):
     users = UserData.objects.all().values('id', 'name', 'email', 'is_journalist')
     return JsonResponse(list(users), safe=False)
 
+
+def store_recommended_articles(user, article_ids):
+    recommended_articles = []
+    
+    for article_id in article_ids:
+        try:
+            news_article = News.objects.get(id=article_id)
+            recommended_article = RecommendedArticle(user=user, news=news_article)
+            recommended_articles.append(recommended_article)
+        except News.DoesNotExist:
+            # Handle the case where the article ID doesn't exist
+            continue
+    
+    # Bulk create to improve performance
+    RecommendedArticle.objects.bulk_create(recommended_articles)
