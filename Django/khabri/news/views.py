@@ -107,3 +107,20 @@ def store_recommended_articles(user_id, article_ids):
     
     # Bulk create to improve performance
     RecommendedArticle.objects.bulk_create(recommended_articles)
+
+
+@csrf_exempt
+def health(request):
+    if request.method == 'GET':
+        news = News.objects.filter(category='health').values()
+        context = {"news": list(news)}
+        return JsonResponse(context, safe=False)
+    return JsonResponse({"error": "Only GET requests are allowed."}, status=400)
+        
+
+        
+
+
+      
+
+    

@@ -22,7 +22,7 @@ class UserData(models.Model):
     id = models.CharField(primary_key=True, max_length=255)  # Automatically incrementing primary key field
     name = models.CharField(max_length=255)  # Name field
     email = models.CharField(max_length=255)   # Email field with unique constraint
-    is_journalist = models.BooleanField(default=False)  # Boolean field to indicate if the user is a journalist
+    is_journalist = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
