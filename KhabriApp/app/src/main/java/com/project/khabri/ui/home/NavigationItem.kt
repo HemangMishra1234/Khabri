@@ -23,6 +23,5 @@ enum class NavigationItem(
         iconNotSelected = Icons.Outlined.Home
     ),
     PROFILE("Profile", Icons.Default.Person, Icons.Outlined.Person),
-    CALENDER("Calender", Icons.Default.CalendarMonth, Icons.Outlined.CalendarMonth),
     ADDNEWS("Post News", Icons.Default.Add, Icons.Outlined.Add)
 }
