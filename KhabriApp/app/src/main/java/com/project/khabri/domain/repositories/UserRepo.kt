@@ -20,14 +20,14 @@ class UserRepo(val auth: FirebaseAuth, val api: NewsAPI) {
                 email = email,
                 name = name,
                 id = id,
-                is_journalist = true
+                is_journalist = "Yes"
             )
             Log.i("request", "Sending user data: $userData")
             val response = api.updateUserData(userData)
             Log.i("response", "$response")
-            if (response.isSuccessful.not()) {
-                throw HttpException(response)
-            }
+//            if (response.isCanceled) {
+//                throw HttpException(404)
+//            }
             Log.i("success", "User data pushed successfully")
         } catch (e: Exception) {
             Log.i("error", "$e")

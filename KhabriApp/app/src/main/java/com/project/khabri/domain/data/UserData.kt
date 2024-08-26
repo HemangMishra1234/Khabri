@@ -4,5 +4,5 @@ data class UserData(
     val email: String,
     val name: String,
     val id: String,
-    val is_journalist: Boolean
+    val is_journalist: String
 )

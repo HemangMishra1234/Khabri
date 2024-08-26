@@ -2,6 +2,7 @@ package com.project.khabri.domain.remote
 
 import com.project.khabri.domain.data.Article
 import com.project.khabri.domain.data.UserData
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -33,7 +34,6 @@ interface NewsAPI {
     ): Response<List<Article>>
 
     @POST("user/")
-    suspend fun updateUserData(@Body userData: UserData): Response<Void>
-
+    suspend fun updateUserData(@Body userData: UserData): Response<UserData>
 
 }
