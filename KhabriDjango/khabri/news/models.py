@@ -19,9 +19,9 @@ class News(models.Model):
         return self.title
     
 class UserData(models.Model):
-    id = models.AutoField(primary_key=True)  # Automatically incrementing primary key field
+    id = models.CharField(primary_key=True, max_length=255)  # Automatically incrementing primary key field
     name = models.CharField(max_length=255)  # Name field
-    email = models.EmailField(unique=True)   # Email field with unique constraint
+    email = models.CharField(max_length=255)   # Email field with unique constraint
     is_journalist = models.BooleanField(default=False)  # Boolean field to indicate if the user is a journalist
 
     def __str__(self):
